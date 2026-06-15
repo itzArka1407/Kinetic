@@ -1,9 +1,93 @@
+import { useEffect, useState, type UIEvent } from "react";
 import { BrowserRouter, } from "react-router-dom";
+import TodoPanel from "./main-panels/TodoPanel";
+import ActivePanel from "./main-panels/ActivePanel";
+import CompletedPanel from "./main-panels/CompletedPanel";
+import FooterButton from "./footer-components/footer-button";
+import { act_cr, todo_cr, type Task } from "./state";
+
+function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Dispatch<React.SetStateAction<Task[][]>> }) {
+    const buttonIconURLS = [
+        'url(./src/assets/add-todo-task.svg)',
+        'url(./src/assets/add-active-task.svg)'
+    ];
+
+    const taskAdditionBtnClickFn = () => {
+        setTasks(prev_tasks => {
+            const current_panel_tasks = prev_tasks[panelIdx];
+            // TESTING: Directly adding tasks -- but have to be changed in future
+            const gen_fn = panelIdx === 0 ? todo_cr : act_cr;
+            const new_tasks = [...current_panel_tasks, gen_fn()];
+            console.log("Task added");
+            return prev_tasks.with(panelIdx, new_tasks);
+        });
+    };
+
+    return (
+        <header id='app-header'>
+            <h1>Kinetic &gt;&gt;</h1>
+            {panelIdx != 2
+                &&
+                <button style={{ "--icon-url": buttonIconURLS[panelIdx] } as React.CSSProperties}
+                    onClick={taskAdditionBtnClickFn}></button>}
+        </header >
+    );
+}
+
+function Body({ tasks, onScroll }: { tasks: Task[][], onScroll: (_: UIEvent<HTMLDivElement>) => void }) {
+    // Todo tasks, active tasks, completed tasks
+    return (
+        <main id='app-body' onScroll={onScroll}>
+            <TodoPanel tasks={tasks[0]} />
+            <ActivePanel tasks={tasks[1]} />
+            <CompletedPanel tasks={tasks[2]} />
+        </main>
+    );
+}
+
+function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: React.Dispatch<React.SetStateAction<number>> }) {
+    return (
+        <footer id='app-footer'>
+            <FooterButton active={panelIdx == 0} name='Todo Tasks' icon='./src/assets/todo.svg' onClick={(_ev) => {
+                setPanelIdx(0);
+            }} />
+            <FooterButton active={panelIdx == 1} name='Active Tasks' icon='./src/assets/active.svg' onClick={(_ev) => {
+                setPanelIdx(1);
+            }} />
+            <FooterButton active={panelIdx == 2} name='Completed Tasks' icon='./src/assets/completed.svg' onClick={(_ev) => {
+                setPanelIdx(2);
+            }} />
+        </footer>
+    );
+}
 
 function APP() {
+    const [panelIdx, setPanelIdx] = useState(0); // Panel index: 0,1,2 -> todo, active, completed panels
+    const [tasks, setTasks] = useState<Task[][]>([[], [], []]); // (panel -> tasks)
+    // When the panel index changes, bring the appropriate panel into view
+    useEffect(() => {
+        document.getElementById('app-body')?.children[panelIdx].scrollIntoView({ behavior: "smooth" });
+    }, [panelIdx]);
+
+    const handleMainPanelScroll = (ev: UIEvent<HTMLDivElement>) => {
+        const container = ev.currentTarget;
+        const exactIdx = container.scrollLeft / container.clientWidth; // Check if a complete scroll is done
+        const currentTabIdx = Math.round(exactIdx);
+
+        // If panel is changed -- perform state changes
+        if (currentTabIdx !== panelIdx) {
+            setPanelIdx(currentTabIdx);
+        }
+    }
+
     return (
-        <BrowserRouter>
-        </BrowserRouter>
+        <>
+            <BrowserRouter>
+            </BrowserRouter>
+            <Header panelIdx={panelIdx} setTasks={setTasks} />
+            <Body tasks={tasks} onScroll={handleMainPanelScroll} />
+            <Footer panelIdx={panelIdx} setPanelIdx={setPanelIdx} />
+        </>
     );
 }
 

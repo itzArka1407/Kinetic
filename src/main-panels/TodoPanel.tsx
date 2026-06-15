@@ -1,8 +1,17 @@
 // Panel to display todo tasks
 
-function TodoPanel({ tasks }: { tasks: Array<any> }) {
+import { type TodoTask } from "../state";
+
+function TodoPanel({ tasks }: { tasks: TodoTask[] }) {
     return (
-        <div></div>
+        <div>
+            {tasks.map(task => {
+                return <div>
+                    <p>{task.name}</p>
+                    <p>{task.scheduled_time}</p>
+                </div>;
+            })}
+        </div>
     );
 }
 
