@@ -4,7 +4,7 @@ import { formatTimeDifference, type TodoTask } from "../state";
 
 function TodoPanel({ tasks }: { tasks: TodoTask[] }) {
     return (
-        <div className="task-container">
+        <div className="task-container scrollBox todo-container">
             {tasks.map(task => {
                 return <div className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
                     <p>{task.name}</p>

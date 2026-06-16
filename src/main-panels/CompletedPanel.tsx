@@ -2,7 +2,7 @@
 
 function CompletedPanel({ tasks }: { tasks: Array<any> }) {
     return (
-        <div className="task-container"></div>
+        <div className="task-container scrollBox completed-container"></div>
     );
 }
 

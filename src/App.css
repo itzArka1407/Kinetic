@@ -6,6 +6,7 @@
 #app-header {
     padding: .4em;
     text-align: left;
+    grid-area: 1/1/2/2;
     display: grid;
     grid-template-columns: minmax(0, 1fr) min-content;
     gap: .8em;
@@ -13,7 +14,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
 
     &::before {
         mask: url(../public/logo.svg);
@@ -34,24 +35,57 @@
 }
 
 #app-body {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 100%);
+    gap: .8em;
     scroll-snap-type: x mandatory;
     overflow-x: scroll;
-    width: 100%;
+    grid-area: 1/1/-1/-1;
+    height: 100vh;
+    padding: .4em;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 
     /* The containers for different task panels */
     &>.task-container {
-        flex: 0 0 100%;
-        height: max-content;
+        /* These paddings are provided for layout shifts */
+        padding-top: var(--header-ht);
+        padding-bottom: var(--footer-ht);
+        height: 100%;
 
-        margin-inline: .4em;
         border-radius: .8em;
         scroll-snap-align: center;
-        padding: .4em;
 
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
         gap: .4em;
+
+        &:empty {
+            grid-template-columns: 1fr;
+
+            &::before {
+                place-self: center;
+                color: var(--text-side);
+                font-size: 3.2em;
+                font-family: 'Orbitron', 'Space Grotesk', 'Syne', 'Syncopate', sans-serif;
+            }
+        }
+
+        /* The text for empty containers */
+        &.active-container:empty::before {
+            content: "ADD ACTIVE TASK";
+        }
+
+        &.todo-container:empty::before {
+            content: 'ADD A NEW TASK';
+        }
+
+        &.completed-container:empty::before {
+            content: "NO TASKS COMPLETED";
+        }
 
         /* The task card */
         &>[class$="-task"] {
@@ -75,6 +109,7 @@
 }
 
 #app-footer {
+    grid-area: -2/1/-1/-1;
     display: grid;
     grid-template-columns: 3;
     grid-auto-flow: column;
@@ -82,7 +117,7 @@
     padding: .2em;
     position: sticky;
     bottom: 0;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(4px);
 
     &>button {
         display: grid;

@@ -41,13 +41,13 @@ function Body({ tasks, onScroll }: { tasks: Task[][], onScroll: (_: UIEvent<HTML
 function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: React.Dispatch<React.SetStateAction<number>> }) {
     return (
         <footer id='app-footer'>
-            <FooterButton active={panelIdx == 0} name='Todo Tasks' icon='./src/assets/todo.svg' onClick={(_ev) => {
+            <FooterButton active={panelIdx == 0} name='Todo' icon='./src/assets/todo.svg' onClick={(_ev) => {
                 setPanelIdx(0);
             }} />
-            <FooterButton active={panelIdx == 1} name='Active Tasks' icon='./src/assets/active.svg' onClick={(_ev) => {
+            <FooterButton active={panelIdx == 1} name='Active' icon='./src/assets/active.svg' onClick={(_ev) => {
                 setPanelIdx(1);
             }} />
-            <FooterButton active={panelIdx == 2} name='Completed Tasks' icon='./src/assets/completed.svg' onClick={(_ev) => {
+            <FooterButton active={panelIdx == 2} name='Completed' icon='./src/assets/completed.svg' onClick={(_ev) => {
                 setPanelIdx(2);
             }} />
         </footer>
