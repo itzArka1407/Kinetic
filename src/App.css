@@ -126,6 +126,7 @@
         gap: .2em;
         font-size: .8em;
         padding-top: .4em;
+        transition: 1s ease;
 
         &::before {
             mask-image: var(--icon-url);

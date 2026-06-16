@@ -62,10 +62,11 @@ function TaskCreationDialog(
                     />
                 </div>
 
-                <div>
-                    {panelIdx == 0 && <label htmlFor="task-start-time">Scheduled Time</label>}
+                {panelIdx === 0 && <div>
+                    <label htmlFor="task-start-time">Scheduled Time</label>
                     <input type="datetime-local" id="task-start-time" name="start-time" required />
-                </div>
+                </div>}
+
                 <div>
                     <label htmlFor="task-end-time">Ends at</label>
                     <input type="datetime-local" id="task-end-time" name="end-time" required />
