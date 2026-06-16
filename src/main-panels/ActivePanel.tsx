@@ -1,8 +1,10 @@
 // Displaying panel for active tasks
 
-function ActivePanel({ tasks }: { tasks: Array<any> }) {
+import type { ActiveTask } from "../state";
+
+function ActivePanel({ tasks }: { tasks: ActiveTask[] }) {
     return (
-        <div></div>
+        <div className="scrollBox"></div>
     );
 }
 

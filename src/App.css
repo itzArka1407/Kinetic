@@ -4,15 +4,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap');
 
 #app-header {
-    margin: .2em;
-    border-radius: .2em;
-    background-color: darkviolet;
     padding: .4em;
     text-align: left;
     display: grid;
     grid-template-columns: minmax(0, 1fr) min-content;
     gap: .8em;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
 
     &::before {
         mask: url(../public/logo.svg);
@@ -23,6 +24,7 @@
         text-transform: uppercase;
         letter-spacing: .4em;
         margin-inline-end: .4em;
+        margin-block: .4em;
     }
 
     &>button::before {
@@ -45,18 +47,40 @@
         padding: .4em;
 
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(0, 12em));
+        grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
+        gap: .4em;
+
+        /* When empty, the empty text will be shown */
+        &:empty {
+            grid-template-columns: 1fr;
+        }
 
         /* The task card */
-        &>div {
-            border: 1px solid white;
+        &>[class$="-task"] {
+            cursor: pointer;
+            padding: .4em;
             aspect-ratio: 1;
             border-radius: .8em;
-            display: flex;
-            align-items: flex-end;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7)),
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) min-content;
+            align-items: end;
+            background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.9)),
                 var(--icon-url, purple) no-repeat center/cover;
+
+            &>.time {
+                font-size: .6em;
+                font-style: italic;
+                justify-self: left;
+            }
         }
+    }
+
+    /* The panel's empty state text */
+    &>div:empty::before {
+        content: 'ADD A TASK';
+        place-self: center;
+        font-size: 4em;
+        color: var(--text-overlay);
     }
 }
 
@@ -65,22 +89,26 @@
     grid-template-columns: 3;
     grid-auto-flow: column;
     gap: .8em;
-    padding: .4em;
-    border-top: 1px solid purple;
+    padding: .2em;
+    position: sticky;
+    bottom: 0;
+    backdrop-filter: blur(8px);
 
     &>button {
-        padding: .4em;
         display: grid;
         grid-template-rows: auto min-content;
         justify-items: center;
-        gap: .4em;
+        gap: .2em;
+        font-size: .8em;
+        padding-top: .4em;
 
         &::before {
             mask-image: var(--icon-url);
         }
 
         &.selected {
-            color: purple;
+            color: violet;
+            border-top: 2px solid violet;
         }
     }
 }
@@ -100,4 +128,21 @@ button::before {
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
+}
+
+.scrollBox {
+    overflow: auto;
+    scrollbar-gutter: stable;
+}
+
+.scrollBox::-webkit-scrollbar {
+    width: calc(2px + .25vw);
+    height: calc(2px + .25vw);
+}
+
+.scrollBox::-webkit-scrollbar-thumb {
+    background-color: var(--color-scroll1);
+    border-radius: .3em;
+    border: .1em solid var(--color-scroll2);
+    cursor: pointer;
 }

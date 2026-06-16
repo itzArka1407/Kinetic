@@ -1,10 +1,10 @@
-import { useEffect, useState, type UIEvent } from "react";
+import { useEffect, useRef, useState, type UIEvent } from "react";
 import { BrowserRouter, } from "react-router-dom";
 import TodoPanel from "./main-panels/TodoPanel";
 import ActivePanel from "./main-panels/ActivePanel";
 import CompletedPanel from "./main-panels/CompletedPanel";
 import FooterButton from "./footer-components/footer-button";
-import { act_cr, todo_cr, type Task } from "./state";
+import { act_cr, todo_cr, type ActiveTask, type Task, type TodoTask } from "./state";
 
 function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Dispatch<React.SetStateAction<Task[][]>> }) {
     const buttonIconURLS = [
@@ -38,8 +38,8 @@ function Body({ tasks, onScroll }: { tasks: Task[][], onScroll: (_: UIEvent<HTML
     // Todo tasks, active tasks, completed tasks
     return (
         <main id='app-body' onScroll={onScroll}>
-            <TodoPanel tasks={tasks[0]} />
-            <ActivePanel tasks={tasks[1]} />
+            <TodoPanel tasks={tasks[0] as TodoTask[]} />
+            <ActivePanel tasks={tasks[1] as ActiveTask[]} />
             <CompletedPanel tasks={tasks[2]} />
         </main>
     );
@@ -64,20 +64,28 @@ function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: Reac
 function APP() {
     const [panelIdx, setPanelIdx] = useState(0); // Panel index: 0,1,2 -> todo, active, completed panels
     const [tasks, setTasks] = useState<Task[][]>([[], [], []]); // (panel -> tasks)
+    const isBodyAutoScrolling = useRef(false); // If scrolling in app's body is made about automatically(by buttons for example)
+    const bodyScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null); // The timeout to determine when the locking on auto-scrolling would occur
+
     // When the panel index changes, bring the appropriate panel into view
     useEffect(() => {
-        document.getElementById('app-body')?.children[panelIdx].scrollIntoView({ behavior: "smooth" });
+        const body = document.getElementById('app-body');
+        isBodyAutoScrolling.current = true; // Mark true -- manual scrolls will be locked
+        body?.scrollTo({ left: panelIdx * body.clientWidth, behavior: "smooth" });
+
+        if (bodyScrollTimeoutRef.current) clearTimeout(bodyScrollTimeoutRef.current);
+        bodyScrollTimeoutRef.current = setTimeout(() => isBodyAutoScrolling.current = false, 400); // 400ms -- browser's natural scroll duration
     }, [panelIdx]);
 
     const handleMainPanelScroll = (ev: UIEvent<HTMLDivElement>) => {
+        if (isBodyAutoScrolling.current) return; // No operations when an auto scrolling is happening
         const container = ev.currentTarget;
         const exactIdx = container.scrollLeft / container.clientWidth; // Check if a complete scroll is done
         const currentTabIdx = Math.round(exactIdx);
 
         // If panel is changed -- perform state changes
-        if (currentTabIdx !== panelIdx) {
+        if (currentTabIdx !== panelIdx)
             setPanelIdx(currentTabIdx);
-        }
     }
 
     return (

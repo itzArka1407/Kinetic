@@ -30,7 +30,7 @@ export function todo_cr(): TodoTask {
         name: "Test TODO",
         scheduled_time: 1000,
         end_time: 2000,
-        task_pic_idx: 0
+        task_pic_idx: 1
     };
 }
 
@@ -39,6 +39,25 @@ export function act_cr(): ActiveTask {
         name: "Test ACTIVE",
         start_time: 1000,
         end_time: 2000,
-        task_pic_idx: 0,
+        task_pic_idx: 1,
     };
+}
+
+// Input a time(since epoch) and check the difference from present
+export function formatTimeDifference(time: timestamp): string {
+    const absDiff = Math.abs(Date.now() - time);
+
+    const seconds = Math.floor(absDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30.437); // Average days in a month
+    const years = Math.floor(days / 365.25);
+
+    if (years > 0) return `${years}y`;
+    if (months > 0) return `${months}M`;
+    if (days > 0) return `${days}d`;
+    if (hours > 0) return `${hours}h`;
+    if (minutes > 0) return `${minutes}m`;
+    return `${Math.max(1, seconds)}s`; // Defaults to seconds, minimum 1s
 }
