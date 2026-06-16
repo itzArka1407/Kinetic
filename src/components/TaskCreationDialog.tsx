@@ -1,5 +1,5 @@
 // Dialog to create a todo task
-import { useRef, useState, type SubmitEvent } from "react";
+import React, { useRef, useState, type InputEvent, type SubmitEvent } from "react";
 import { type ActiveTask, type Task, type TodoTask } from "../state";
 
 function TaskCreationDialog(
@@ -8,6 +8,7 @@ function TaskCreationDialog(
 ) {
     const [selectedImgIdx, setSelectedImgIdx] = useState(1); // The index of the image that is set as wallpaper for the task
     const submitAction = useRef<string | null>(null);
+    const [descriptionLength, setDescLen] = useState<number>(0);
 
     const formSubmissionFn = (ev: SubmitEvent<HTMLFormElement>) => {
         ev.preventDefault();
@@ -21,7 +22,6 @@ function TaskCreationDialog(
             const starting_time = Date.parse(formData.get('start-time') as string) || undefined;
             const ending_time = Date.parse(formData.get('end-time') as string) || undefined;
 
-            console.log(panelIdx); // testing
             let new_task: ActiveTask | TodoTask = panelIdx === 1 ? {
                 name: name,
                 description: description,
@@ -35,13 +35,16 @@ function TaskCreationDialog(
                 end_time: ending_time,
                 task_pic_idx: selectedImgIdx,
             };
-            console.log(new_task); // testing
 
             setTasks(prev_tasks => {
                 const new_tasks = [...prev_tasks[panelIdx], new_task];
                 return prev_tasks.with(panelIdx, new_tasks);
             });
         }
+        ev.currentTarget.reset(); // Reset the form fields
+        submitAction.current = null; // Reset the submission action
+        setSelectedImgIdx(1); // Back to selecting the first image
+        setDescLen(0); // Reset the length
         dialogRef.current?.close();
     }
 
@@ -50,8 +53,13 @@ function TaskCreationDialog(
             <h2>Create Task:</h2>
             <form onSubmit={formSubmissionFn}>
                 <input type="text" name="task-name" placeholder="Task Name" required />
-                <div className="desc-container">
-                    <textarea name="task-desc" maxLength={500} placeholder="Description..." />
+                <div className="desc-container" style={{ "--len": `"${descriptionLength}"` } as React.CSSProperties}>
+                    <textarea
+                        name="task-desc"
+                        maxLength={500}
+                        placeholder="Description..."
+                        onInput={(ev: InputEvent<HTMLTextAreaElement>) => setDescLen(ev.currentTarget.value.length)}
+                    />
                 </div>
 
                 <div>
@@ -66,8 +74,15 @@ function TaskCreationDialog(
                 <TaskImages selImgIdx={selectedImgIdx} setImgIdx={setSelectedImgIdx} />
 
                 <div className="btnBox">
-                    <button type="submit" onClick={() => submitAction.current = 'submit'}></button>
-                    <button type="submit" formNoValidate onClick={() => submitAction.current = 'cancel'}></button>
+                    <button
+                        type="submit"
+                        onClick={() => submitAction.current = 'submit'}>
+                    </button>
+                    <button
+                        type="submit"
+                        formNoValidate
+                        onClick={() => submitAction.current = 'cancel'}>
+                    </button>
                 </div>
             </form>
         </dialog>
