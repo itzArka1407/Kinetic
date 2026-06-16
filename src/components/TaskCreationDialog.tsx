@@ -94,7 +94,7 @@ function TaskImages({ selImgIdx, setImgIdx }: { selImgIdx: number, setImgIdx: Re
     return (
         <div className="task-images-panel">
             <h2>Select Wallpaper:</h2>
-            {[1, 2, 3, 4, 5].map(idx => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(idx => {
                 let image_path = `./src/assets/TasksThumbnails/${idx}.webp`;
                 console.log('Img idx: ', selImgIdx); // testing
                 return <img key={idx} src={image_path} className={selImgIdx === idx ? 'selected' : undefined} onClick={() => { setImgIdx(idx) }} />;
