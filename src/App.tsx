@@ -4,33 +4,26 @@ import TodoPanel from "./main-panels/TodoPanel";
 import ActivePanel from "./main-panels/ActivePanel";
 import CompletedPanel from "./main-panels/CompletedPanel";
 import FooterButton from "./footer-components/footer-button";
-import { act_cr, todo_cr, type ActiveTask, type Task, type TodoTask } from "./state";
+import { type ActiveTask, type Task, type TodoTask } from "./state";
+import TaskCreationDialog from "./components/TaskCreationDialog";
 
 function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Dispatch<React.SetStateAction<Task[][]>> }) {
     const buttonIconURLS = [
         'url(./src/assets/add-todo-task.svg)',
         'url(./src/assets/add-active-task.svg)'
     ];
+    const taskCreationDialogRef = useRef<HTMLDialogElement | null>(null);
 
-    const taskAdditionBtnClickFn = () => {
-        setTasks(prev_tasks => {
-            const current_panel_tasks = prev_tasks[panelIdx];
-            // TESTING: Directly adding tasks -- but have to be changed in future
-            const gen_fn = panelIdx === 0 ? todo_cr : act_cr;
-            const new_tasks = [...current_panel_tasks, gen_fn()];
-            console.log("Task added");
-            return prev_tasks.with(panelIdx, new_tasks);
-        });
-    };
-
+    const taskAdditionBtnClickFn = () => taskCreationDialogRef.current?.showModal();
     return (
         <header id='app-header'>
+            <TaskCreationDialog dialogRef={taskCreationDialogRef} setTasks={setTasks} panelIdx={panelIdx} />
             <h1>Kinetic &gt;&gt;</h1>
             {panelIdx != 2
                 &&
                 <button style={{ "--icon-url": buttonIconURLS[panelIdx] } as React.CSSProperties}
                     onClick={taskAdditionBtnClickFn}></button>}
-        </header >
+        </header>
     );
 }
 

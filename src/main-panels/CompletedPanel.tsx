@@ -2,7 +2,7 @@
 
 function CompletedPanel({ tasks }: { tasks: Array<any> }) {
     return (
-        <div></div>
+        <div className="task-container"></div>
     );
 }
 

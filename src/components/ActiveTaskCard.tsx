@@ -1,12 +1,11 @@
 // Card representing an active task
 
-import { task_pics, type ActiveTask } from "../state";
+import { type ActiveTask } from "../state";
 
 function ActiveCardTask({ task }: { task: ActiveTask }) {
     // TODO: Format the date of start of the task
     return (
         <div>
-            <img src={task_pics[task.task_pic_idx]} alt="Task" />
             <p>{task.name}</p>
             <p>{task.start_time}</p>
         </div>

@@ -34,13 +34,16 @@
 }
 
 #app-body {
-    display: grid;
-    grid-template-columns: repeat(3, 100%);
+    display: flex;
     scroll-snap-type: x mandatory;
     overflow-x: scroll;
+    width: 100%;
 
     /* The containers for different task panels */
-    &>div {
+    &>.task-container {
+        flex: 0 0 100%;
+        height: max-content;
+
         margin-inline: .4em;
         border-radius: .8em;
         scroll-snap-align: center;
@@ -50,20 +53,15 @@
         grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
         gap: .4em;
 
-        /* When empty, the empty text will be shown */
-        &:empty {
-            grid-template-columns: 1fr;
-        }
-
         /* The task card */
         &>[class$="-task"] {
             cursor: pointer;
             padding: .4em;
             aspect-ratio: 1;
             border-radius: .8em;
-            display: grid;
-            grid-template-rows: minmax(0, 1fr) min-content;
-            align-items: end;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
             background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.9)),
                 var(--icon-url, purple) no-repeat center/cover;
 
@@ -73,14 +71,6 @@
                 justify-self: left;
             }
         }
-    }
-
-    /* The panel's empty state text */
-    &>div:empty::before {
-        content: 'ADD A TASK';
-        place-self: center;
-        font-size: 4em;
-        color: var(--text-overlay);
     }
 }
 
@@ -145,4 +135,94 @@ button::before {
     border-radius: .3em;
     border: .1em solid var(--color-scroll2);
     cursor: pointer;
+}
+
+#task-creation-dialog {
+    place-self: center;
+    border: none;
+    padding: .8em;
+    border-radius: .8em;
+    display: flex;
+    flex-direction: column;
+    gap: .8em;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+    }
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6em;
+
+        & input {
+            all: unset;
+        }
+
+        & input[name="task-name"] {
+            background-color: var(--input-bg);
+            padding: .6em .4em;
+            border-radius: .8em;
+        }
+
+        & .desc-container {
+            width: 100%;
+            background-color: var(--input-bg);
+            border-radius: .8em;
+            padding: .6em .4em;
+
+            &>textarea {
+                all: unset;
+                height: 5.4em;
+                border: none;
+                width: 100%;
+            }
+        }
+
+
+        & label {
+            background-color: var(--input-bg);
+            padding: .4em;
+            border-radius: .4em;
+        }
+
+        & .task-images-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 8em);
+            gap: 1.2em;
+
+            &>h2 {
+                grid-column: 1/-1;
+            }
+
+            &>img {
+                cursor: pointer;
+                display: block;
+                width: 8em;
+                aspect-ratio: 1;
+                border-radius: .4em;
+                transition: .2s ease;
+
+                &:hover {
+                    scale: 1.1;
+                }
+
+                &.selected {
+                    border: 2px solid white;
+                }
+            }
+        }
+
+        & .btnBox {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.2em;
+            font-size: 1.6em;
+        }
+    }
+
+    &:not(:open) {
+        display: none !important;
+    }
 }
