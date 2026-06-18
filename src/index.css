@@ -7,6 +7,7 @@
     --color-scroll2: red;
     --input-bg: rgb(220, 220, 220);
     --bg: rgba(225, 225, 225, 1);
+    --btn-sel-clr: rgb(300, 200, 200);
 
     font: 18px/145% var(--sans);
     letter-spacing: .6px;
@@ -24,6 +25,7 @@
         --text-side: rgba(255, 255, 255, 0.2);
         --input-bg: rgb(20, 20, 20);
         --bg: rgba(25, 25, 25, 1);
+        --btn-sel-clr: rgb(300, 200, 200);
     }
 
     #social .button-icon {
@@ -68,6 +70,28 @@ dialog {
         backdrop-filter: blur(4px);
     }
 }
+
+button {
+    all: unset;
+    cursor: pointer;
+
+    &.selected {
+        color: var(--btn-sel-clr);
+    }
+}
+
+/* Button's icon  */
+button::before {
+    content: '';
+    display: block;
+    width: var(--icon-size, 1.6em);
+    aspect-ratio: 1;
+    background-color: currentColor;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+
 
 /* A wrapper over a textarea */
 .textarea-wrapper {

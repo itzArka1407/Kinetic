@@ -10,7 +10,7 @@
     text-align: left;
     grid-area: 1/1/2/2;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) min-content;
+    grid-template-columns: minmax(0, 1fr) min-content min-content;
     gap: .8em;
     align-items: center;
     position: sticky;
@@ -22,12 +22,32 @@
         mask: url(../public/logo.svg);
     }
 
-    &>h1 {
-        font-family: 'Orbitron', 'Space Grotesk', 'Syne', 'Syncopate', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: .3em;
-        margin-inline-end: .4em;
-        margin-block: .4em;
+    &>.app-header-heading-wrapper {
+        display: grid;
+        width: 19em;
+        overflow: hidden;
+        grid-template-columns: repeat(2, 100%);
+        transition: .2s ease;
+
+        &>h1 {
+            font-family: 'Orbitron', 'Space Grotesk', 'Syne', 'Syncopate', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .3em;
+            margin-inline-end: .4em;
+            margin-block: .4em;
+        }
+
+        &>input {
+            background-color: var(--input-bg);
+            padding-inline: .8em;
+            border-radius: .8em;
+        }
+
+        /* In searching mode, show the search bar */
+        &.search-mode {
+            overflow: visible;
+            transform: translateX(-100%);
+        }
     }
 
     &>button::before {
@@ -54,8 +74,8 @@
     /* The containers for different task panels */
     &>.task-container {
         /* These paddings are provided for layout shifts */
-        padding-top: calc(var(--header-ht) + 8px);
-        padding-bottom: calc(var(--footer-ht) + 8px);
+        padding-top: calc(var(--header-ht) + 12px);
+        padding-bottom: calc(var(--footer-ht) + 12px);
         height: 100%;
 
         border-radius: .8em;
@@ -140,23 +160,6 @@
             border-top: 2px solid violet;
         }
     }
-}
-
-button {
-    all: unset;
-    cursor: pointer;
-}
-
-/* Button's icon  */
-button::before {
-    content: '';
-    display: block;
-    width: var(--icon-size, 1.6em);
-    aspect-ratio: 1;
-    background-color: currentColor;
-    mask-size: contain;
-    mask-repeat: no-repeat;
-    mask-position: center;
 }
 
 .scrollBox {

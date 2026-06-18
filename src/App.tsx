@@ -13,15 +13,33 @@ function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Disp
         'url(./src/assets/add-todo-task.svg)',
         'url(./src/assets/add-active-task.svg)'
     ];
-    const [actionState, setActionState] = useState<'task creation' | null>(null);
+    const [actionState, setActionState] = useState<'task creation' | 'search-mode' | null>(null);
+    const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+        if (actionState === 'search-mode') searchInputRef.current?.focus();
+    }, [actionState]);
+
     return (
         <header id='app-header'>
             <TaskCreationDialog setTasks={setTasks} panelIdx={panelIdx} actionState={actionState} setActionState={setActionState} />
-            <h1>Kinetic &gt;&gt;</h1>
+            <div className={"app-header-heading-wrapper" + (actionState === 'search-mode' ? " search-mode" : "")}>
+                <h1>Kinetic &gt;&gt;</h1>
+                <input
+                    ref={searchInputRef}
+                    placeholder={"Search " + (panelIdx === 0 ? "Todo Tasks" : panelIdx === 1 ? "Active Tasks" : "Completed Tasks") + "..."}
+                />
+            </div>
+            <button
+                onClick={() => { actionState !== 'search-mode' ? setActionState('search-mode') : setActionState(null) }}
+                style={{ "--icon-url": "url(./src/assets/search.svg)" } as React.CSSProperties}
+                className={actionState === 'search-mode' ? 'selected' : ''}
+            />
             {panelIdx != 2
                 &&
                 <button style={{ "--icon-url": buttonIconURLS[panelIdx] } as React.CSSProperties}
-                    onClick={() => setActionState('task creation')}></button>}
+                    onClick={() => setActionState('task creation')}
+                />}
         </header>
     );
 }

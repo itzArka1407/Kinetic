@@ -4,11 +4,10 @@ import { useCurrentDateTimeConstraint, type Task } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
 
 function DisplayTaskDialog(
-    { display_task, setDisplayTask, panelIdx }
+    { display_task, setDisplayTask }
         : {
             display_task: Task | null,
             setDisplayTask: React.Dispatch<React.SetStateAction<Task | null>>
-            panelIdx: number,
         }
 ) {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -39,6 +38,7 @@ function DisplayTaskDialog(
     const imageSrc = `./src/assets/TasksThumbnails/${display_task?.task_pic_idx}.webp`;
     const currentDateTimeLocal = useCurrentDateTimeConstraint();
 
+    // The scheduled_time field is searched in the task -- it is only possible for a Todo task
     return (
         <dialog id="task-display-dialog" ref={dialogRef}>
             <form onSubmit={formSubmitAction}>
@@ -48,7 +48,7 @@ function DisplayTaskDialog(
                         <input type="text" defaultValue={display_task?.name} placeholder="Task Name" name="task-name" />
                         <TextAreaWrapper defaultValue={display_task?.description} />
                     </div>
-                    {panelIdx === 0 && <div className="time-wrapper">
+                    {display_task && 'scheduled_time' in display_task && <div className="time-wrapper">
                         <label htmlFor="task-stored-start-time">Scheduled Time</label>
                         <input type="datetime-local" id="task-stored-start-time" min={currentDateTimeLocal} name="start-time" required />
                     </div>}

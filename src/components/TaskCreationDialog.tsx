@@ -8,7 +8,7 @@ function TaskCreationDialog(
         {
             setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
             panelIdx: number,
-            actionState: 'task creation' | null,
+            actionState: 'task creation' | 'search-mode' | null,
             setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>
         }
 ) {
