@@ -23,7 +23,15 @@ export interface TodoTask {
     task_pic_idx: index, // Index of the task thumbnail
 }
 
-export type Task = TodoTask | ActiveTask;
+// A task which is completed
+export interface CompletedTask {
+    name: string, // Name of task
+    description: string, // Task description
+    completed_time: timestamp, // When the task was completed
+    task_pic_idx: index, // Index of task thumbnail
+}
+
+export type Task = TodoTask | ActiveTask | CompletedTask;
 
 // Input a time(since epoch) and check the difference from present
 export function formatTimeDifference(time: timestamp): string {

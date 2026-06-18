@@ -1,8 +1,13 @@
 // Panel to display completed tasks
 
-function CompletedPanel({ tasks }: { tasks: Array<any> }) {
+import type React from "react";
+import type { Task } from "../state";
+
+function CompletedPanel({ tasks, setSelectedTask }: { tasks: Array<any>, setSelectedTask: React.Dispatch<React.SetStateAction<Task | null>> }) {
+    // TODO: Complete the complete panel design
     return (
-        <div className="task-container scrollBox completed-container"></div>
+        <div onClick={() => { }}
+            className="task-container scrollBox completed-container"></div>
     );
 }
 

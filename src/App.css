@@ -3,6 +3,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap');
 
+@import './component-styles/display-task-dialog.css';
+
 #app-header {
     padding: .4em;
     text-align: left;
@@ -23,7 +25,7 @@
     &>h1 {
         font-family: 'Orbitron', 'Space Grotesk', 'Syne', 'Syncopate', sans-serif;
         text-transform: uppercase;
-        letter-spacing: .4em;
+        letter-spacing: .3em;
         margin-inline-end: .4em;
         margin-block: .4em;
     }
@@ -52,15 +54,15 @@
     /* The containers for different task panels */
     &>.task-container {
         /* These paddings are provided for layout shifts */
-        padding-top: var(--header-ht);
-        padding-bottom: var(--footer-ht);
+        padding-top: calc(var(--header-ht) + 8px);
+        padding-bottom: calc(var(--footer-ht) + 8px);
         height: 100%;
 
         border-radius: .8em;
         scroll-snap-align: center;
 
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(max(10em, 20%), 1fr));
         gap: .4em;
 
         &:empty {
@@ -69,6 +71,7 @@
             &::before {
                 place-self: center;
                 color: var(--text-side);
+                line-height: 2em;
                 font-size: 3.2em;
                 font-family: 'Orbitron', 'Space Grotesk', 'Syne', 'Syncopate', sans-serif;
             }
@@ -76,7 +79,7 @@
 
         /* The text for empty containers */
         &.active-container:empty::before {
-            content: "ADD ACTIVE TASK";
+            content: "NO ACTIVE TASKS";
         }
 
         &.todo-container:empty::before {
@@ -111,7 +114,7 @@
 #app-footer {
     grid-area: -2/1/-1/-1;
     display: grid;
-    grid-template-columns: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-auto-flow: column;
     gap: .8em;
     padding: .2em;
@@ -174,63 +177,19 @@ button::before {
 }
 
 #task-creation-dialog {
-    place-self: center;
-    border: none;
-    padding: .8em;
-    border-radius: .8em;
     display: flex;
     flex-direction: column;
     gap: .8em;
-    width: 70vw;
-
-    &::backdrop {
-        background-color: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-    }
 
     & form {
         display: flex;
         flex-direction: column;
         gap: 1.6em;
 
-        & input {
-            all: unset;
-        }
-
         & input[name="task-name"] {
             background-color: var(--input-bg);
             padding: .6em .4em;
             border-radius: .8em;
-        }
-
-        & .desc-container {
-            width: 100%;
-            background-color: var(--input-bg);
-            border-radius: .8em;
-            padding: .6em .4em 1.2em .4em;
-            position: relative;
-
-            &::after {
-                position: absolute;
-                bottom: .1em;
-                right: .8em;
-                font-size: .6em;
-                content: var(--len) "/500";
-            }
-
-            &>textarea {
-                all: unset;
-                height: 5.4em;
-                border: none;
-                width: 100%;
-            }
-        }
-
-
-        & label {
-            background-color: var(--input-bg);
-            padding: .4em;
-            border-radius: .4em;
         }
 
         & .task-images-panel {

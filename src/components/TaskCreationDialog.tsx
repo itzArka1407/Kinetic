@@ -1,14 +1,30 @@
 // Dialog to create a todo task
-import React, { useRef, useState, type InputEvent, type SubmitEvent } from "react";
+import React, { useEffect, useRef, useState, type SubmitEvent } from "react";
 import { useCurrentDateTimeConstraint, type ActiveTask, type Task, type TodoTask } from "../state";
+import TextAreaWrapper from "./TextAreaWrapper";
 
 function TaskCreationDialog(
-    { setTasks, dialogRef, panelIdx }:
-        { setTasks: React.Dispatch<React.SetStateAction<Task[][]>>, dialogRef: React.RefObject<HTMLDialogElement | null>, panelIdx: number }
+    { setTasks, panelIdx, actionState, setActionState }:
+        {
+            setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
+            panelIdx: number,
+            actionState: 'task creation' | null,
+            setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>
+        }
 ) {
     const [selectedImgIdx, setSelectedImgIdx] = useState(1); // The index of the image that is set as wallpaper for the task
     const submitAction = useRef<string | null>(null);
-    const [descriptionLength, setDescLen] = useState<number>(0);
+    const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+    useEffect(() => {
+        if (actionState === 'task creation') {
+            dialogRef.current?.showModal();
+        } else {
+            dialogRef.current?.close();
+            submitAction.current = null; // Clear out the submit action state
+            setSelectedImgIdx(1); // Set to the first image selected as wallpaper for the new task
+        }
+    }, [actionState]);
 
     const formSubmissionFn = (ev: SubmitEvent<HTMLFormElement>) => {
         ev.preventDefault();
@@ -22,7 +38,7 @@ function TaskCreationDialog(
             const starting_time = Date.parse(formData.get('start-time') as string) || Date.now(); // For active tasks, this is Date.now(0
             const ending_time = Date.parse(formData.get('end-time') as string);
 
-            if (starting_time < Date.now() || ending_time < starting_time) return; // Invalid inputs
+            if (starting_time < Date.now() || ending_time < starting_time) return; // Invalid inpus
 
             let new_task: ActiveTask | TodoTask = panelIdx === 1 ? {
                 name: name,
@@ -44,34 +60,24 @@ function TaskCreationDialog(
             });
         }
         ev.currentTarget.reset(); // Reset the form fields
-        submitAction.current = null; // Reset the submission action
-        setSelectedImgIdx(1); // Back to selecting the first image
-        setDescLen(0); // Reset the length
-        dialogRef.current?.close();
+        setActionState(null);
     }
 
     const currentDateTimeLocal = useCurrentDateTimeConstraint();
-
     return (
         <dialog ref={dialogRef} id="task-creation-dialog">
             <h2>Create Task:</h2>
             <form onSubmit={formSubmissionFn}>
                 <input type="text" name="task-name" placeholder="Task Name" required />
-                <div className="desc-container" style={{ "--len": `"${descriptionLength}"` } as React.CSSProperties}>
-                    <textarea
-                        name="task-desc"
-                        maxLength={500}
-                        placeholder="Description..."
-                        onInput={(ev: InputEvent<HTMLTextAreaElement>) => setDescLen(ev.currentTarget.value.length)}
-                    />
-                </div>
 
-                {panelIdx === 0 && <div>
+                <TextAreaWrapper defaultValue={actionState ? "" : undefined} />
+
+                {panelIdx === 0 && <div className="time-wrapper">
                     <label htmlFor="task-start-time">Scheduled Time</label>
                     <input type="datetime-local" id="task-start-time" min={currentDateTimeLocal} name="start-time" required />
                 </div>}
 
-                <div>
+                <div className="time-wrapper">
                     <label htmlFor="task-end-time">Ends at</label>
                     <input type="datetime-local" id="task-end-time" min={currentDateTimeLocal} name="end-time" required />
                 </div>

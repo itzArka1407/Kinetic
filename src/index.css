@@ -6,6 +6,7 @@
     --color-scroll1: blue;
     --color-scroll2: red;
     --input-bg: rgb(220, 220, 220);
+    --bg: rgba(225, 225, 225, 1);
 
     font: 18px/145% var(--sans);
     letter-spacing: .6px;
@@ -15,10 +16,6 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    @media (max-width: 1024px) {
-        font-size: 16px;
-    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +23,7 @@
         --text: #ffffff;
         --text-side: rgba(255, 255, 255, 0.2);
         --input-bg: rgb(20, 20, 20);
+        --bg: rgba(25, 25, 25, 1);
     }
 
     #social .button-icon {
@@ -42,10 +40,67 @@
     display: grid;
     grid-template-columns: 1;
     grid-template-rows: var(--header-ht) minmax(0, 1fr) var(--footer-ht);
+    background-color: var(--bg);
+    font-size: calc(8px + 1vw);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+textarea,
+input {
+    all: unset;
+}
+
+dialog {
+    place-self: center;
+    border: none;
+    padding: .8em;
+    border-radius: .8em;
+    width: max(20em, 70vw);
+    max-height: 90vh;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+    }
+}
+
+/* A wrapper over a textarea */
+.textarea-wrapper {
+    width: 100%;
+    background-color: var(--input-bg);
+    border-radius: .8em;
+    padding: .6em .4em 1.2em .4em;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        bottom: .1em;
+        right: .8em;
+        font-size: .6em;
+        content: var(--len) "/500";
+    }
+
+    &>textarea {
+        height: 5.4em;
+        width: 100%;
+    }
+}
+
+/* A wrapper for time inputs and labels */
+.time-wrapper {
+    font-size: .8em;
+
+    & label {
+        background-color: var(--input-bg);
+        padding: .4em;
+        border-radius: .4em;
+        font-size: .8em;
+        font-style: italic;
+    }
+
 }

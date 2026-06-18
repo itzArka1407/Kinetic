@@ -6,34 +6,35 @@ import CompletedPanel from "./main-panels/CompletedPanel";
 import FooterButton from "./footer-components/footer-button";
 import { type ActiveTask, type Task, type TodoTask } from "./state";
 import TaskCreationDialog from "./components/TaskCreationDialog";
+import DisplayTaskDialog from "./components/TaskDisplayDialog";
 
 function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Dispatch<React.SetStateAction<Task[][]>> }) {
     const buttonIconURLS = [
         'url(./src/assets/add-todo-task.svg)',
         'url(./src/assets/add-active-task.svg)'
     ];
-    const taskCreationDialogRef = useRef<HTMLDialogElement | null>(null);
-
-    const taskAdditionBtnClickFn = () => taskCreationDialogRef.current?.showModal();
+    const [actionState, setActionState] = useState<'task creation' | null>(null);
     return (
         <header id='app-header'>
-            <TaskCreationDialog dialogRef={taskCreationDialogRef} setTasks={setTasks} panelIdx={panelIdx} />
+            <TaskCreationDialog setTasks={setTasks} panelIdx={panelIdx} actionState={actionState} setActionState={setActionState} />
             <h1>Kinetic &gt;&gt;</h1>
             {panelIdx != 2
                 &&
                 <button style={{ "--icon-url": buttonIconURLS[panelIdx] } as React.CSSProperties}
-                    onClick={taskAdditionBtnClickFn}></button>}
+                    onClick={() => setActionState('task creation')}></button>}
         </header>
     );
 }
 
 function Body({ tasks, onScroll }: { tasks: Task[][], onScroll: (_: UIEvent<HTMLDivElement>) => void }) {
-    // Todo tasks, active tasks, completed tasks
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
     return (
         <main id='app-body' onScroll={onScroll}>
-            <TodoPanel tasks={tasks[0] as TodoTask[]} />
-            <ActivePanel tasks={tasks[1] as ActiveTask[]} />
-            <CompletedPanel tasks={tasks[2]} />
+            <TodoPanel tasks={tasks[0] as TodoTask[]} setSelectedTask={setSelectedTask} />
+            <ActivePanel tasks={tasks[1] as ActiveTask[]} setSelectedTask={setSelectedTask} />
+            <CompletedPanel tasks={tasks[2]} setSelectedTask={setSelectedTask} />
+            <DisplayTaskDialog display_task={selectedTask} setDisplayTask={setSelectedTask} />
         </main>
     );
 }
