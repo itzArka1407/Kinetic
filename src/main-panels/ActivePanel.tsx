@@ -7,16 +7,18 @@ function ActivePanel({ tasks, setSelectedTask }: { tasks: ActiveTask[], setSelec
     return (
         <div className="task-container scrollBox active-container">
             {tasks.map(task => {
-                return <div onClick={() => setSelectedTask(task)}
-                    className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
-                    <p>{task.name}</p>
-                    {task.start_time
-                        && task.end_time
-                        && <span className="time">
-                            Started: {formatTimeDifference(task.start_time)} ago
-                            | Ends in: {formatTimeDifference(task.end_time)}
-                        </span>}
-                </div>;
+                return task.visible ?
+                    <div onClick={() => setSelectedTask(task)}
+                        className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
+                        <p>{task.name}</p>
+                        {task.start_time
+                            && task.end_time
+                            && <span className="time">
+                                Started: {formatTimeDifference(task.start_time)} ago
+                                | Ends in: {formatTimeDifference(task.end_time)}
+                            </span>}
+                    </div>
+                    : <></>;
             })}
         </div>
     );

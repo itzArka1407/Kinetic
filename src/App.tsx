@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type UIEvent } from "react";
+import { useEffect, useRef, useState, type InputEvent, type UIEvent } from "react";
 import { BrowserRouter, } from "react-router-dom";
 import TodoPanel from "./main-panels/TodoPanel";
 import ActivePanel from "./main-panels/ActivePanel";
@@ -7,8 +7,16 @@ import FooterButton from "./footer-components/footer-button";
 import { type ActiveTask, type Task, type TodoTask } from "./state";
 import TaskCreationDialog from "./components/TaskCreationDialog";
 import DisplayTaskDialog from "./components/TaskDisplayDialog";
+import Fuse from "fuse.js";
 
-function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Dispatch<React.SetStateAction<Task[][]>> }) {
+function Header(
+    { panelIdx, setTasks, searchTasks }:
+        {
+            panelIdx: number,
+            setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
+            searchTasks: (_: InputEvent<HTMLInputElement>) => void,
+        }
+) {
     const buttonIconURLS = [
         'url(./src/assets/add-todo-task.svg)',
         'url(./src/assets/add-active-task.svg)'
@@ -28,6 +36,7 @@ function Header({ panelIdx, setTasks }: { panelIdx: number, setTasks: React.Disp
                 <input
                     ref={searchInputRef}
                     placeholder={"Search " + (panelIdx === 0 ? "Todo Tasks" : panelIdx === 1 ? "Active Tasks" : "Completed Tasks") + "..."}
+                    onInput={searchTasks}
                 />
             </div>
             <button
@@ -99,12 +108,35 @@ function APP() {
         if (currentTabIdx !== panelIdx)
             setPanelIdx(currentTabIdx);
     }
+    const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    function filterTasks(ev: InputEvent<HTMLInputElement>) { // Side note: Use ChangeEvent for React input elements
+        if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+        const query = ev.currentTarget.value.trim();
+
+        searchTimeoutRef.current = setTimeout(() => {
+            const currentPanelTasks = tasks[panelIdx];
+
+            if (!query) {
+                const resetTasks = currentPanelTasks.map(task => ({ ...task, visible: true }));
+                setTasks(tasks.with(panelIdx, resetTasks));
+                return;
+            }
+            const fuse = new Fuse(currentPanelTasks, { keys: ['name'], threshold: 0.4 });
+            const filtered_tasks = fuse.search(query);
+            const matchedIndices = new Set(filtered_tasks.map(result => result.refIndex));
+            const updatedTasks = currentPanelTasks.map((task, index) => ({
+                ...task,
+                visible: matchedIndices.has(index)
+            }));
+            setTasks(tasks.with(panelIdx, updatedTasks));
+        }, 600);
+    }
 
     return (
         <>
             <BrowserRouter>
             </BrowserRouter>
-            <Header panelIdx={panelIdx} setTasks={setTasks} />
+            <Header panelIdx={panelIdx} setTasks={setTasks} searchTasks={filterTasks} />
             <Body tasks={tasks} onScroll={handleMainPanelScroll} />
             <Footer panelIdx={panelIdx} setPanelIdx={setPanelIdx} />
         </>

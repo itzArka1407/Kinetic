@@ -7,11 +7,13 @@ function TodoPanel({ tasks, setSelectedTask }: { tasks: TodoTask[], setSelectedT
     return (
         <div className="task-container scrollBox todo-container">
             {tasks.map(task => {
-                return <div onClick={() => setSelectedTask(task)}
-                    className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
-                    <p>{task.name}</p>
-                    {task.scheduled_time && <span className="time">Starts in: {formatTimeDifference(task.scheduled_time)}</span>}
-                </div>;
+                return task.visible ?
+                    <div onClick={() => setSelectedTask(task)}
+                        className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
+                        <p>{task.name}</p>
+                        {task.scheduled_time && <span className="time">Starts in: {formatTimeDifference(task.scheduled_time)}</span>}
+                    </div>
+                    : <></>;
             })}
         </div>
     );

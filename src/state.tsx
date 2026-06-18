@@ -12,6 +12,7 @@ export interface ActiveTask {
     start_time: timestamp, // Starting time of the task
     end_time: timestamp | undefined, // When the task ends(undefined -> forever)
     task_pic_idx: index, // Index of the task thumbnail(chosen from app's default tasks)
+    visible: boolean, // If the task is to be displayed in UI
 }
 
 // A task which is scheduled for future starting
@@ -21,6 +22,7 @@ export interface TodoTask {
     scheduled_time: timestamp | undefined, // Time when the task is supposed to start(undefined -> not decided)
     end_time: timestamp | undefined, // Then the task ends(undefined -> not decided)
     task_pic_idx: index, // Index of the task thumbnail
+    visible: boolean, // If the task is to be displayed in UI
 }
 
 // A task which is completed
@@ -29,6 +31,7 @@ export interface CompletedTask {
     description: string, // Task description
     completed_time: timestamp, // When the task was completed
     task_pic_idx: index, // Index of task thumbnail
+    visible: boolean, // If the task is to be displayed in UI
 }
 
 export type Task = TodoTask | ActiveTask | CompletedTask;

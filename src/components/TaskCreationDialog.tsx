@@ -46,12 +46,14 @@ function TaskCreationDialog(
                 start_time: starting_time,
                 end_time: ending_time,
                 task_pic_idx: selectedImgIdx,
+                visible: true,
             } : {
                 name: name,
                 description: description,
                 scheduled_time: starting_time,
                 end_time: ending_time,
                 task_pic_idx: selectedImgIdx,
+                visible: true,
             };
 
             setTasks(prev_tasks => {
