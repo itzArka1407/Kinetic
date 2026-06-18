@@ -181,6 +181,7 @@ button::before {
     display: flex;
     flex-direction: column;
     gap: .8em;
+    width: 70vw;
 
     &::backdrop {
         background-color: rgba(0, 0, 0, 0.6);
@@ -234,7 +235,7 @@ button::before {
 
         & .task-images-panel {
             display: grid;
-            grid-template-columns: repeat(3, 8em);
+            grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
             gap: 1.2em;
 
             &>h2 {
@@ -244,7 +245,7 @@ button::before {
             &>img {
                 cursor: pointer;
                 display: block;
-                width: 8em;
+                width: 100%;
                 aspect-ratio: 1;
                 border-radius: .4em;
                 transition: .2s ease;

@@ -1,5 +1,7 @@
 // Contains shared state of various elements used throughout the app
 
+import { useEffect, useState } from "react";
+
 export type timestamp = number; // Just alias for time stamp -- makes code clearer
 export type index = number; // Same, just for code readability
 
@@ -40,4 +42,28 @@ export function formatTimeDifference(time: timestamp): string {
     if (hours > 0) return `${hours}h`;
     if (minutes > 0) return `${minutes}m`;
     return `${Math.max(1, seconds)}s`; // Defaults to seconds, minimum 1s
+}
+
+export function useCurrentDateTimeConstraint() {
+    const [minDateTime, setMinDateTime] = useState('');
+
+    useEffect(() => {
+        const calculateCurrentTime = () => {
+            const now = new Date();
+
+            // Format to strict: YYYY-MM-DDTHH:MM
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        };
+
+        // Initialize immediately on mount
+        setMinDateTime(calculateCurrentTime());
+    }, []);
+
+    return minDateTime;
 }

@@ -1,6 +1,6 @@
 // Dialog to create a todo task
 import React, { useRef, useState, type InputEvent, type SubmitEvent } from "react";
-import { type ActiveTask, type Task, type TodoTask } from "../state";
+import { useCurrentDateTimeConstraint, type ActiveTask, type Task, type TodoTask } from "../state";
 
 function TaskCreationDialog(
     { setTasks, dialogRef, panelIdx }:
@@ -19,13 +19,15 @@ function TaskCreationDialog(
         if (submitAction.current === 'submit') {
             const name = formData.get('task-name') as string;
             const description = formData.get('task-desc') as string;
-            const starting_time = Date.parse(formData.get('start-time') as string) || undefined;
-            const ending_time = Date.parse(formData.get('end-time') as string) || undefined;
+            const starting_time = Date.parse(formData.get('start-time') as string) || Date.now(); // For active tasks, this is Date.now(0
+            const ending_time = Date.parse(formData.get('end-time') as string);
+
+            if (starting_time < Date.now() || ending_time < starting_time) return; // Invalid inputs
 
             let new_task: ActiveTask | TodoTask = panelIdx === 1 ? {
                 name: name,
                 description: description,
-                start_time: Date.now(), // Active task is added NOW
+                start_time: starting_time,
                 end_time: ending_time,
                 task_pic_idx: selectedImgIdx,
             } : {
@@ -48,6 +50,8 @@ function TaskCreationDialog(
         dialogRef.current?.close();
     }
 
+    const currentDateTimeLocal = useCurrentDateTimeConstraint();
+
     return (
         <dialog ref={dialogRef} id="task-creation-dialog">
             <h2>Create Task:</h2>
@@ -64,12 +68,12 @@ function TaskCreationDialog(
 
                 {panelIdx === 0 && <div>
                     <label htmlFor="task-start-time">Scheduled Time</label>
-                    <input type="datetime-local" id="task-start-time" name="start-time" required />
+                    <input type="datetime-local" id="task-start-time" min={currentDateTimeLocal} name="start-time" required />
                 </div>}
 
                 <div>
                     <label htmlFor="task-end-time">Ends at</label>
-                    <input type="datetime-local" id="task-end-time" name="end-time" required />
+                    <input type="datetime-local" id="task-end-time" min={currentDateTimeLocal} name="end-time" required />
                 </div>
 
                 <TaskImages selImgIdx={selectedImgIdx} setImgIdx={setSelectedImgIdx} />

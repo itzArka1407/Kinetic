@@ -36,10 +36,9 @@
 #root {
     --header-ht: 4em;
     --footer-ht: 3.7em;
-    width: 1126px;
-    max-width: 100%;
+    width: 100vw;
+    height: 100vh;
     text-align: center;
-    min-height: 100svh;
     display: grid;
     grid-template-columns: 1;
     grid-template-rows: var(--header-ht) minmax(0, 1fr) var(--footer-ht);
