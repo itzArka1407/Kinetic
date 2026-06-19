@@ -78,3 +78,15 @@ export function useCurrentDateTimeConstraint() {
 
     return minDateTime;
 }
+
+export const formatTimestampForInput = (timestamp: timestamp | undefined): string => {
+    if (!timestamp) return "";
+
+    const date = new Date(timestamp);
+    // Adjust for local timezone offset so toISOString() outputs local time numbers
+    const tzOffsetMs = date.getTimezoneOffset() * 60000;
+    const localDate = new Date(date.getTime() - tzOffsetMs);
+
+    // slice(0, 16) extracts exactly "YYYY-MM-DDTHH:mm"
+    return localDate.toISOString().slice(0, 16);
+};

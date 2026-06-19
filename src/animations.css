@@ -1,0 +1,97 @@
+@keyframes typingAnim {
+    0% {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    100% {
+        clip-path: inset(0 0% 0 0);
+    }
+}
+
+@keyframes entryAnim {
+    0% {
+        opacity: .8;
+        scale: .94;
+    }
+
+    60% {
+        scale: 1.0;
+        opacity: .8;
+    }
+}
+
+@keyframes entryAnimY {
+    0% {
+        translate: 0 -100%;
+        opacity: .2;
+    }
+
+    20% {
+        translate: 0 .4em;
+    }
+
+    40% {
+        translate: 0 0;
+    }
+}
+
+@keyframes entryAnim-Y {
+    0% {
+        translate: 0 100%;
+        opacity: .6;
+    }
+
+    20% {
+        translate: 0 0;
+    }
+}
+
+@keyframes blinkAnim {
+    50% {
+        scale: 0;
+    }
+}
+
+@keyframes scaleXAnim {
+    0% {
+        scale: 0 1;
+    }
+}
+
+@keyframes scaleAnim {
+    0% {
+        scale: 0;
+    }
+}
+
+@keyframes float-XAnim {
+    0% {
+        translate: -.5em 0;
+        opacity: .9;
+    }
+
+    30%,
+    70% {
+        opacity: .7;
+    }
+
+    45% {
+        translate: .2em 0;
+    }
+}
+
+.entry-anim {
+    animation: entryAnim .4s ease forwards;
+}
+
+.entry-animY {
+    animation: entryAnimY .4s ease forwards;
+}
+
+.scaleX-anim {
+    animation: scaleXAnim .15s ease forwards;
+}
+
+.float-anim {
+    animation: float-XAnim .4s ease-in-out;
+}

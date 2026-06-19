@@ -67,7 +67,7 @@ function TaskCreationDialog(
 
     const currentDateTimeLocal = useCurrentDateTimeConstraint();
     return (
-        <dialog ref={dialogRef} id="task-creation-dialog" onClose={onClose}>
+        <dialog ref={dialogRef} id="task-creation-dialog" className="scrollBox no-scrollbar entry-anim" onClose={onClose}>
             <h2>Create Task:</h2>
             <form onSubmit={formSubmissionFn}>
                 <input type="text" name="task-name" placeholder="Task Name" required />

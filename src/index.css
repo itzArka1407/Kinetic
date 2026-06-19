@@ -1,13 +1,14 @@
 :root {
-    --text: #6b6375;
-    --text-side: rgba(40, 40, 40, 0.2);
-    --text-overlay: rgba(255, 255, 255, 0.2);
+    --text: #26160A;
+    --text-side: rgba(42, 61, 69, 0.4);
     --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-    --color-scroll1: blue;
-    --color-scroll2: red;
-    --input-bg: rgb(220, 220, 220);
-    --bg: rgba(225, 225, 225, 1);
-    --btn-sel-clr: rgb(300, 200, 200);
+    --color-scroll1: #725D46aa;
+    --color-scroll2: #422912bb;
+    --input-bg: #E3DCD7;
+    --bg: #DBD7D1;
+    --btn-sel-clr: #5E4523;
+    --dialog-backdrop-clr: #C6B79D11;
+    --pic-overlay-clr: #E2DED0aa;
 
     font: 18px/145% var(--sans);
     letter-spacing: .6px;
@@ -23,11 +24,13 @@
     :root {
         --text: #ffffff;
         --text-side: rgba(255, 255, 255, 0.2);
-        --input-bg: rgb(20, 20, 20);
-        --bg: #1F1516;
+        --input-bg: #1F1516;
+        --bg: #151414;
         --color-scroll1: rgba(196, 163, 129, 0.8);
         --color-scroll1: rgba(178, 103, 94, 0.5);
         --btn-sel-clr: #B68989;
+        --dialog-backdrop-clr: #00000011;
+        --pic-overlay-clr: #0E090Ebb;
     }
 
     #social .button-icon {
@@ -68,7 +71,7 @@ dialog {
     max-height: 90vh;
 
     &::backdrop {
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: var(--dialog-backdrop-clr);
         backdrop-filter: blur(4px);
     }
 }
@@ -137,7 +140,7 @@ button::before {
     -webkit-line-clamp: var(--lines, 1);
     line-clamp: var(--lines, 1);
     overflow: hidden;
-    max-height: calc(1.5em * var(--lines, 2));
+    max-height: calc(2.4em * var(--lines, 1));
 }
 
 .wlc.l-2 {

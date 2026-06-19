@@ -1,6 +1,6 @@
 // To display a task that is already created
 import React, { useEffect, useRef, type SubmitEvent } from "react";
-import { useCurrentDateTimeConstraint, type Task } from "../state";
+import { formatTimestampForInput, useCurrentDateTimeConstraint, type Task } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
 
 function DisplayTaskDialog(
@@ -41,7 +41,7 @@ function DisplayTaskDialog(
 
     // The scheduled_time field is searched in the task -- it is only possible for a Todo task
     return (
-        <dialog id="task-display-dialog" ref={dialogRef} onClose={onClose}>
+        <dialog id="task-display-dialog" className="entry-anim" ref={dialogRef} onClose={onClose}>
             <form onSubmit={formSubmitAction}>
                 <main className="scrollBox no-scrollbar">
                     <div className="img-wrapper">
@@ -49,15 +49,30 @@ function DisplayTaskDialog(
                         <input type="text" defaultValue={display_task?.name} placeholder="Task Name" name="task-name" />
                         <TextAreaWrapper defaultValue={display_task?.description} />
                     </div>
+
                     {display_task && 'scheduled_time' in display_task && <div className="time-wrapper">
                         <label htmlFor="task-stored-start-time">Scheduled Time</label>
-                        <input type="datetime-local" id="task-stored-start-time" min={currentDateTimeLocal} name="start-time" required />
+                        <input
+                            type="datetime-local"
+                            id="task-stored-start-time"
+                            min={currentDateTimeLocal}
+                            defaultValue={formatTimestampForInput(display_task.scheduled_time)}
+                            name="start-time"
+                            required
+                        />
                     </div>}
 
-                    <div className="time-wrapper">
+                    {display_task && 'end_time' in display_task && <div className="time-wrapper">
                         <label htmlFor="task-stored-end-time">Ends at</label>
-                        <input type="datetime-local" id="task-stored-end-time" min={currentDateTimeLocal} name="end-time" required />
-                    </div>
+                        <input
+                            type="datetime-local"
+                            id="task-stored-end-time"
+                            min={currentDateTimeLocal}
+                            defaultValue={formatTimestampForInput(display_task.end_time)}
+                            name="end-time"
+                            required
+                        />
+                    </div>}
 
                 </main>
                 <div>

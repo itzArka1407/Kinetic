@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap');
 
 @import './component-styles/display-task-dialog.css';
+@import './animations.css';
 
 #app-header {
     padding: .4em;
@@ -117,17 +118,16 @@
             cursor: pointer;
             padding: .4em;
             aspect-ratio: 1;
-            border-radius: .8em;
+            border-radius: 6%;
             display: flex;
             flex-direction: column;
             justify-content: end;
-            background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.9)),
+            background: linear-gradient(to bottom, transparent 30%, var(--pic-overlay-clr)),
                 var(--icon-url, var(--btn-sel-clr)) no-repeat center/cover;
 
             &>.time {
                 font-size: .6em;
                 font-style: italic;
-                justify-self: left;
             }
         }
     }
