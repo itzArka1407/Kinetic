@@ -10,10 +10,10 @@ function ActivePanel({ tasks, setSelectedTask }: { tasks: ActiveTask[], setSelec
                 return task.visible ?
                     <div onClick={() => setSelectedTask(task)}
                         className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
-                        <p>{task.name}</p>
+                        <p className="wlc">{task.name}</p>
                         {task.start_time
                             && task.end_time
-                            && <span className="time">
+                            && <span className="time wlc">
                                 Started: {formatTimeDifference(task.start_time)} ago
                                 | Ends in: {formatTimeDifference(task.end_time)}
                             </span>}

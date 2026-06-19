@@ -24,8 +24,10 @@
         --text: #ffffff;
         --text-side: rgba(255, 255, 255, 0.2);
         --input-bg: rgb(20, 20, 20);
-        --bg: rgba(25, 25, 25, 1);
-        --btn-sel-clr: rgb(300, 200, 200);
+        --bg: #1F1516;
+        --color-scroll1: rgba(196, 163, 129, 0.8);
+        --color-scroll1: rgba(178, 103, 94, 0.5);
+        --btn-sel-clr: #B68989;
     }
 
     #social .button-icon {
@@ -36,8 +38,8 @@
 #root {
     --header-ht: 4em;
     --footer-ht: 3.7em;
-    width: 100vw;
-    height: 100vh;
+    position: fixed;
+    inset: 0;
     text-align: center;
     display: grid;
     grid-template-columns: 1;
@@ -127,4 +129,17 @@ button::before {
         font-style: italic;
     }
 
+}
+
+.wlc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--lines, 1);
+    line-clamp: var(--lines, 1);
+    overflow: hidden;
+    max-height: calc(1.5em * var(--lines, 2));
+}
+
+.wlc.l-2 {
+    --lines: 2;
 }

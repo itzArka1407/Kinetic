@@ -10,8 +10,8 @@ function TodoPanel({ tasks, setSelectedTask }: { tasks: TodoTask[], setSelectedT
                 return task.visible ?
                     <div onClick={() => setSelectedTask(task)}
                         className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
-                        <p>{task.name}</p>
-                        {task.scheduled_time && <span className="time">Starts in: {formatTimeDifference(task.scheduled_time)}</span>}
+                        <p className="wlc">{task.name}</p>
+                        {task.scheduled_time && <span className="time wlc">Starts in: {formatTimeDifference(task.scheduled_time)}</span>}
                     </div>
                     : <></>;
             })}

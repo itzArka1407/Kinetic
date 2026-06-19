@@ -17,14 +17,14 @@ function TaskCreationDialog(
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
-        if (actionState === 'task creation') {
-            dialogRef.current?.showModal();
-        } else {
-            dialogRef.current?.close();
-            submitAction.current = null; // Clear out the submit action state
-            setSelectedImgIdx(1); // Set to the first image selected as wallpaper for the new task
-        }
+        if (actionState === 'task creation') dialogRef.current?.showModal();
     }, [actionState]);
+
+    function onClose() {
+        setActionState(null);
+        submitAction.current = null;
+        setSelectedImgIdx(1);
+    } // For dialog's close event
 
     const formSubmissionFn = (ev: SubmitEvent<HTMLFormElement>) => {
         ev.preventDefault();
@@ -62,12 +62,12 @@ function TaskCreationDialog(
             });
         }
         ev.currentTarget.reset(); // Reset the form fields
-        setActionState(null);
+        dialogRef.current?.close();
     }
 
     const currentDateTimeLocal = useCurrentDateTimeConstraint();
     return (
-        <dialog ref={dialogRef} id="task-creation-dialog">
+        <dialog ref={dialogRef} id="task-creation-dialog" onClose={onClose}>
             <h2>Create Task:</h2>
             <form onSubmit={formSubmissionFn}>
                 <input type="text" name="task-name" placeholder="Task Name" required />

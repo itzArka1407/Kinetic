@@ -13,7 +13,6 @@ function DisplayTaskDialog(
     const dialogRef = useRef<HTMLDialogElement | null>(null);
     useEffect(() => {
         if (display_task) dialogRef.current?.showModal();
-        else dialogRef.current?.close();
     }, [display_task]);
 
     const submitAction = useRef<string | null>(null); // The action performed on the dialog
@@ -32,17 +31,19 @@ function DisplayTaskDialog(
 
         // Resetting phase after operations
         ev.currentTarget.reset(); // Clear out the form components
-        setDisplayTask(null); // Remove the displayed task state
+        dialogRef.current?.close(); // Close the dialog
     }
+
+    function onClose() { setDisplayTask(null) }; // For the dialog's closing event
 
     const imageSrc = `./src/assets/TasksThumbnails/${display_task?.task_pic_idx}.webp`;
     const currentDateTimeLocal = useCurrentDateTimeConstraint();
 
     // The scheduled_time field is searched in the task -- it is only possible for a Todo task
     return (
-        <dialog id="task-display-dialog" ref={dialogRef}>
+        <dialog id="task-display-dialog" ref={dialogRef} onClose={onClose}>
             <form onSubmit={formSubmitAction}>
-                <main>
+                <main className="scrollBox no-scrollbar">
                     <div className="img-wrapper">
                         <img src={imageSrc} />
                         <input type="text" defaultValue={display_task?.name} placeholder="Task Name" name="task-name" />
@@ -60,9 +61,9 @@ function DisplayTaskDialog(
 
                 </main>
                 <div>
-                    <button type="submit" onClick={() => submitAction.current = 'start now'}></button>
-                    <button type="submit" onClick={() => submitAction.current = 'save changes'}></button>
-                    <button type="submit" formNoValidate onClick={() => submitAction.current = 'cancel'}></button>
+                    <button type="submit" onClick={() => submitAction.current = 'start now'}><span>Start Now</span></button>
+                    <button type="submit" onClick={() => submitAction.current = 'save changes'}><span>Save Changes</span></button>
+                    <button type="submit" formNoValidate onClick={() => submitAction.current = 'cancel'}><span>Cancel</span></button>
                 </div>
             </form>
         </dialog>
