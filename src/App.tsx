@@ -8,6 +8,7 @@ import { type ActiveTask, type Task, type TodoTask } from "./state";
 import TaskCreationDialog from "./components/TaskCreationDialog";
 import DisplayTaskDialog from "./components/TaskDisplayDialog";
 import Fuse from "fuse.js";
+import ToolsPanel from "./main-panels/tools-panel/ToolsPanel";
 
 function Header(
     { panelIdx, setTasks, searchTasks }:
@@ -61,6 +62,7 @@ function Body({ tasks, onScroll }: { tasks: Task[][], onScroll: (_: UIEvent<HTML
             <TodoPanel tasks={tasks[0] as TodoTask[]} setSelectedTask={setSelectedTask} />
             <ActivePanel tasks={tasks[1] as ActiveTask[]} setSelectedTask={setSelectedTask} />
             <CompletedPanel tasks={tasks[2]} setSelectedTask={setSelectedTask} />
+            <ToolsPanel />
             <DisplayTaskDialog display_task={selectedTask} setDisplayTask={setSelectedTask} />
         </main>
     );
@@ -77,6 +79,9 @@ function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: Reac
             }} />
             <FooterButton active={panelIdx == 2} name='Completed' icon='./src/assets/completed.svg' onClick={(_ev) => {
                 setPanelIdx(2);
+            }} />
+            <FooterButton active={panelIdx == 3} name='Tools' icon='./src/assets/tools.svg' onClick={(_ev) => {
+                setPanelIdx(3);
             }} />
         </footer>
     );
