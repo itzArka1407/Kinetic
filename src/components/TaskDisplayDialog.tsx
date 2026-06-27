@@ -1,6 +1,6 @@
 // To display a task that is already created
 import React, { useEffect, useRef, type SubmitEvent } from "react";
-import { formatTimestampForInput, useCurrentDateTimeConstraint, type Task } from "../state";
+import { formatTimeDifference, formatTimestampForInput, useCurrentDateTimeConstraint, type Task, type timestamp } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
 
 function DisplayTaskDialog(
@@ -11,6 +11,12 @@ function DisplayTaskDialog(
         }
 ) {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+    // Checks if a task is a completed task(used for UI designs)
+    function isCompletedTask(task: Task | null): task is Task & { completed_time: timestamp } {
+        return !!task && 'completed_time' in task;
+    }
+
     useEffect(() => {
         if (display_task) dialogRef.current?.showModal();
     }, [display_task]);
@@ -46,8 +52,17 @@ function DisplayTaskDialog(
                 <main className="scrollBox no-scrollbar">
                     <div className="img-wrapper">
                         <img src={imageSrc} />
-                        <input type="text" defaultValue={display_task?.name} placeholder="Task Name" name="task-name" />
-                        <TextAreaWrapper defaultValue={display_task?.description} />
+                        <input
+                            type="text"
+                            defaultValue={display_task?.name}
+                            readOnly={isCompletedTask(display_task)}
+                            placeholder="Task Name"
+                            name="task-name"
+                        />
+                        <TextAreaWrapper
+                            readOnly={isCompletedTask(display_task)}
+                            defaultValue={display_task?.description}
+                        />
                     </div>
 
                     {display_task && 'scheduled_time' in display_task && <div className="time-wrapper">
@@ -74,6 +89,9 @@ function DisplayTaskDialog(
                         />
                     </div>}
 
+                    {isCompletedTask(display_task) && <div className="time-wrapper">
+                        <span>Completed: {formatTimeDifference(display_task.completed_time)} ago</span>
+                    </div>}
                 </main>
                 <div>
                     <button type="submit" onClick={() => submitAction.current = 'start now'}><span>Start Now</span></button>

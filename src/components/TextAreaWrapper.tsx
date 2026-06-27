@@ -1,9 +1,9 @@
 import { useEffect, useState, type InputEvent } from "react";
 
 function TextAreaWrapper(
-    { defaultValue = undefined }:
+    { defaultValue = undefined, readOnly = false }:
         // Action state represents the state of action, sometimes, the default value is constant, so the action state is needed for reactivity
-        { defaultValue?: string | undefined }
+        { defaultValue?: string | undefined, readOnly?: boolean }
 ) {
     const [len, setLen] = useState(defaultValue?.length || 0);
     // Everytime the default value is loaded, the length is set based on the default value
@@ -18,6 +18,7 @@ function TextAreaWrapper(
             placeholder="Description..."
             onInput={(ev: InputEvent<HTMLTextAreaElement>) => setLen(ev.currentTarget.value.length)}
             defaultValue={defaultValue}
+            readOnly={readOnly}
         />
     </div>);
 }

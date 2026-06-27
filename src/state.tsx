@@ -1,9 +1,10 @@
 // Contains shared state of various elements used throughout the app
 
 import { useEffect, useState } from "react";
-
 export type timestamp = number; // Just alias for time stamp -- makes code clearer
 export type index = number; // Same, just for code readability
+
+// ALERT: The visible field in various tasks are used purely for UI purposes, like filtering out tasks during a search
 
 // A task which is actively running
 export interface ActiveTask {
@@ -90,3 +91,13 @@ export const formatTimestampForInput = (timestamp: timestamp | undefined): strin
     // slice(0, 16) extracts exactly "YYYY-MM-DDTHH:mm"
     return localDate.toISOString().slice(0, 16);
 };
+
+export const createCompletedTask = (): CompletedTask => {
+    return {
+        name: `CompletedTask${Math.random() * 1000 | 0}`,
+        description: `Completed task: ${Math.random() * 100 | 0}`,
+        completed_time: Date.now() - Math.random() * 10000000 | 0,
+        task_pic_idx: Math.random() * 12 | 0,
+        visible: true,
+    } as CompletedTask;
+}
