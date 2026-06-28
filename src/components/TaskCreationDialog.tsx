@@ -58,7 +58,9 @@ function TaskCreationDialog(
 
             setTasks(prev_tasks => {
                 const new_tasks = [...prev_tasks[panelIdx], new_task];
-                return prev_tasks.with(panelIdx, new_tasks);
+                const updated_tasks = prev_tasks.with(panelIdx, new_tasks);
+                window.localStorage.setItem('kinetic', JSON.stringify(updated_tasks));
+                return updated_tasks;
             });
         }
         ev.currentTarget.reset(); // Reset the form fields

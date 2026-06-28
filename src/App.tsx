@@ -4,7 +4,7 @@ import TodoPanel from "./main-panels/TodoPanel";
 import ActivePanel from "./main-panels/ActivePanel";
 import CompletedPanel from "./main-panels/CompletedPanel";
 import FooterButton from "./footer-components/footer-button";
-import { createCompletedTask, type ActiveTask, type CompletedTask, type Task, type TodoTask } from "./state";
+import { type ActiveTask, type CompletedTask, type Task, type TodoTask } from "./state";
 import TaskCreationDialog from "./components/TaskCreationDialog";
 import DisplayTaskDialog from "./components/TaskDisplayDialog";
 import Fuse from "fuse.js";
@@ -90,14 +90,12 @@ function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: Reac
 function APP() {
     const [panelIdx, setPanelIdx] = useState(0); // Panel index: 0,1,2 -> todo, active, completed panels
 
-    // TESTING: Loading with test completed tasks -- remove and implement actually completed tasks
-    const no_of_iterations = Math.random() * 4 | 0;
-    let test_compl_arr: CompletedTask[] = [];
-    for (let i = 0; i < no_of_iterations; i++)
-        test_compl_arr.push(createCompletedTask());
+    // Get the exsiting tasks posted by the user
+    let existing_data;
+    try { existing_data = window.localStorage.getItem('kinetic') } catch (err) { console.warn(`Err ${err} while reading tasks`) };
+    const existing_tasks = existing_data ? JSON.parse(existing_data) : [[], [], []];
 
-    console.log(test_compl_arr);
-    const [tasks, setTasks] = useState<Task[][]>([[], [], test_compl_arr]); // (panel -> tasks)
+    const [tasks, setTasks] = useState<Task[][]>(existing_tasks); // (panel -> tasks)
 
     const isBodyAutoScrolling = useRef(false); // If scrolling in app's body is made about automatically(by buttons for example)
     const bodyScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null); // The timeout to determine when the locking on auto-scrolling would occur
