@@ -14,7 +14,7 @@ function CompletedPanel({ tasks, setSelectedTask }: { tasks: CompletedTask[], se
                         style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}
                     >
                         <p className="wlc">{task.name}</p>
-                        <span>Completed: {formatTimeDifference(task.completed_time)} ago</span>
+                        <span className="time wlc">Completed: {formatTimeDifference(task.completed_time)} ago</span>
                     </div>
                     : <></>;
             })}

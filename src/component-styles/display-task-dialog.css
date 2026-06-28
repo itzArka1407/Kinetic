@@ -59,7 +59,7 @@
                 }
 
                 &:nth-of-type(1)::before {
-                    rotate: -30deg;
+                    rotate: -15deg;
                     mask-image: url(/src/assets/send.svg);
                 }
 
@@ -70,6 +70,18 @@
                 &:nth-of-type(3)::before {
                     mask-image: url(/src/assets/close.svg);
                 }
+            }
+
+            /* Based on the type of task, the display of buttons are controlled */
+
+            /* For active task, the start button is hidden because the task is already started */
+            &.act>button:nth-of-type(1) {
+                display: none !important;
+            }
+
+            /* For completed task, both the starting button and the changes save button are hidden */
+            &.compl>:is(button:nth-of-type(1), button:nth-of-type(2)) {
+                display: none !important;
             }
         }
     }

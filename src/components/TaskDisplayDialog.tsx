@@ -1,6 +1,6 @@
 // To display a task that is already created
 import React, { useEffect, useRef, type SubmitEvent } from "react";
-import { formatTimeDifference, formatTimestampForInput, useCurrentDateTimeConstraint, type Task, type timestamp } from "../state";
+import { formatTimeDifference, formatTimestampForInput, useCurrentDateTimeConstraint, type ActiveTask, type CompletedTask, type Task } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
 
 function DisplayTaskDialog(
@@ -13,15 +13,21 @@ function DisplayTaskDialog(
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     // Checks if a task is a completed task(used for UI designs)
-    function isCompletedTask(task: Task | null): task is Task & { completed_time: timestamp } {
+    function isCompletedTask(task: Task | null): task is CompletedTask {
         return !!task && 'completed_time' in task;
     }
 
+    // Checks if a task is an active task
+    function isActiveTask(task: Task | null): task is ActiveTask {
+        return !!task && 'start_time' in task;
+    }
+
+    const submitAction = useRef<'cancel' | 'start now' | 'save changes'>('cancel'); // The action performed on the dialog
     useEffect(() => {
+        submitAction.current = 'cancel'; // Per new task, the submit action is refreshed
         if (display_task) dialogRef.current?.showModal();
     }, [display_task]);
 
-    const submitAction = useRef<string | null>(null); // The action performed on the dialog
     // TODO: Perform the submit action for the form
     function formSubmitAction(ev: SubmitEvent<HTMLFormElement>) {
         ev.preventDefault();
@@ -35,8 +41,6 @@ function DisplayTaskDialog(
             // TODO: Modify the starting time of the task to start it now
         }
 
-        // Resetting phase after operations
-        ev.currentTarget.reset(); // Clear out the form components
         dialogRef.current?.close(); // Close the dialog
     }
 
@@ -47,8 +51,16 @@ function DisplayTaskDialog(
 
     // The scheduled_time field is searched in the task -- it is only possible for a Todo task
     return (
-        <dialog id="task-display-dialog" className="entry-anim" ref={dialogRef} onClose={onClose}>
-            <form onSubmit={formSubmitAction}>
+        <dialog
+            id="task-display-dialog"
+            className="entry-anim"
+            ref={dialogRef}
+            onClose={onClose}
+            key={display_task ? `open-${display_task.name}` : 'closed'}
+        >
+            <form
+                onSubmit={formSubmitAction}
+            >
                 <main className="scrollBox no-scrollbar">
                     <div className="img-wrapper">
                         <img src={imageSrc} />
@@ -58,6 +70,7 @@ function DisplayTaskDialog(
                             readOnly={isCompletedTask(display_task)}
                             placeholder="Task Name"
                             name="task-name"
+                            required
                         />
                         <TextAreaWrapper
                             readOnly={isCompletedTask(display_task)}
@@ -93,10 +106,17 @@ function DisplayTaskDialog(
                         <span>Completed: {formatTimeDifference(display_task.completed_time)} ago</span>
                     </div>}
                 </main>
-                <div>
+                <div
+                    className={isCompletedTask(display_task) ? 'compl' : isActiveTask(display_task) ? 'act' : 'todo'}
+                >
                     <button type="submit" onClick={() => submitAction.current = 'start now'}><span>Start Now</span></button>
                     <button type="submit" onClick={() => submitAction.current = 'save changes'}><span>Save Changes</span></button>
-                    <button type="submit" formNoValidate onClick={() => submitAction.current = 'cancel'}><span>Cancel</span></button>
+                    <button
+                        type="submit"
+                        formNoValidate
+                        onClick={() => submitAction.current = 'cancel'}
+                    ><span>{isCompletedTask(display_task) ? 'Close' : 'Cancel'}</span>
+                    </button>
                 </div>
             </form>
         </dialog>
