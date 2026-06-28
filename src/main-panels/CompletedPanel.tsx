@@ -1,15 +1,15 @@
 // Panel to display completed tasks
 
 import type React from "react";
-import { formatTimeDifference, type CompletedTask, type Task } from "../state";
+import { formatTimeDifference, type CompletedTask } from "../state";
 
-function CompletedPanel({ tasks, setSelectedTask }: { tasks: CompletedTask[], setSelectedTask: React.Dispatch<React.SetStateAction<Task | null>> }) {
+function CompletedPanel({ tasks, setDisplayTaskIdx }: { tasks: CompletedTask[], setDisplayTaskIdx: React.Dispatch<React.SetStateAction<number>> }) {
     // TODO: Complete the complete panel design
     return (
         <div className="task-container scrollBox completed-container">
             {tasks.map((task, idx) => {
                 return task.visible ?
-                    <div key={idx} onClick={() => setSelectedTask(task)}
+                    <div key={idx} onClick={() => setDisplayTaskIdx(idx)}
                         className="completed-task"
                         style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}
                     >

@@ -54,16 +54,28 @@ function Header(
     );
 }
 
-function Body({ tasks, onScroll }: { tasks: Task[][], onScroll: (_: UIEvent<HTMLDivElement>) => void }) {
-    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+function Body({ tasks, setTasks, panelIdx, onScroll }:
+    {
+        tasks: Task[][],
+        setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
+        panelIdx: number,
+        onScroll: (_: UIEvent<HTMLDivElement>) => void
+    }) {
+    const [display_task_idx, set_display_task_idx] = useState(-1);
 
     return (
         <main id='app-body' onScroll={onScroll}>
-            <TodoPanel tasks={tasks[0] as TodoTask[]} setSelectedTask={setSelectedTask} />
-            <ActivePanel tasks={tasks[1] as ActiveTask[]} setSelectedTask={setSelectedTask} />
-            <CompletedPanel tasks={tasks[2] as CompletedTask[]} setSelectedTask={setSelectedTask} />
+            <TodoPanel tasks={tasks[0] as TodoTask[]} setDisplayTaskIdx={set_display_task_idx} />
+            <ActivePanel tasks={tasks[1] as ActiveTask[]} setDisplayTaskIdx={set_display_task_idx} />
+            <CompletedPanel tasks={tasks[2] as CompletedTask[]} setDisplayTaskIdx={set_display_task_idx} />
             <ToolsPanel />
-            <DisplayTaskDialog display_task={selectedTask} setDisplayTask={setSelectedTask} />
+            <DisplayTaskDialog
+                taskIdx={display_task_idx}
+                setTaskIdx={set_display_task_idx}
+                setTasks={setTasks}
+                panelIdx={panelIdx}
+                tasks={tasks}
+            />
         </main>
     );
 }
@@ -149,7 +161,7 @@ function APP() {
             <BrowserRouter>
             </BrowserRouter>
             <Header panelIdx={panelIdx} setTasks={setTasks} searchTasks={filterTasks} />
-            <Body tasks={tasks} onScroll={handleMainPanelScroll} />
+            <Body tasks={tasks} panelIdx={panelIdx} setTasks={setTasks} onScroll={handleMainPanelScroll} />
             <Footer panelIdx={panelIdx} setPanelIdx={setPanelIdx} />
         </>
     );

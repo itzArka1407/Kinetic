@@ -1,25 +1,35 @@
 // To display a task that is already created
 import React, { useEffect, useRef, type SubmitEvent } from "react";
-import { formatTimeDifference, formatTimestampForInput, useCurrentDateTimeConstraint, type ActiveTask, type CompletedTask, type Task } from "../state";
+import { formatTimeDifference, formatTimestampForInput, useCurrentDateTimeConstraint, type ActiveTask, type CompletedTask, type Task, type TodoTask } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
 
 function DisplayTaskDialog(
-    { display_task, setDisplayTask }
+    { tasks, setTasks, panelIdx, taskIdx, setTaskIdx }
         : {
-            display_task: Task | null,
-            setDisplayTask: React.Dispatch<React.SetStateAction<Task | null>>
+            tasks: Task[][],
+            setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
+            panelIdx: number,
+            taskIdx: number,
+            setTaskIdx: React.Dispatch<React.SetStateAction<number>>
         }
 ) {
+    // Tasks only exist for the first 3 panels
+    const display_task: Task | null = panelIdx < 3 ? tasks[panelIdx][taskIdx] : null;
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     // Checks if a task is a completed task(used for UI designs)
-    function isCompletedTask(task: Task | null): task is CompletedTask {
-        return !!task && 'completed_time' in task;
+    function isCompletedTask(_task: Task | null): _task is CompletedTask {
+        return panelIdx === 2;
     }
 
     // Checks if a task is an active task
-    function isActiveTask(task: Task | null): task is ActiveTask {
-        return !!task && 'start_time' in task;
+    function isActiveTask(_task: Task | null): _task is ActiveTask {
+        return panelIdx === 1;
+    }
+
+    // Checks if a task is a todo task
+    function isTodoTask(_task: Task | null): _task is TodoTask {
+        return panelIdx === 0;
     }
 
     const submitAction = useRef<'cancel' | 'start now' | 'save changes'>('cancel'); // The action performed on the dialog
@@ -28,12 +38,25 @@ function DisplayTaskDialog(
         if (display_task) dialogRef.current?.showModal();
     }, [display_task]);
 
-    // TODO: Perform the submit action for the form
     function formSubmitAction(ev: SubmitEvent<HTMLFormElement>) {
         ev.preventDefault();
         const formData = new FormData(ev.currentTarget);
-        const task_name = formData.get('task-name');
-        const task_desc = formData.get('task-desc');
+        const task_name = formData.get('task-name')?.toString() || '';
+        const task_desc = formData.get('task-desc')?.toString() || '';
+
+        const new_task = { ...display_task, name: task_name, description: task_desc } as ActiveTask | TodoTask;
+
+        // Update with new set of tasks: both in UI and local storage
+        setTasks(prev_tasks => {
+            const updated_tasks = prev_tasks.with(
+                panelIdx,
+                prev_tasks[panelIdx].with(taskIdx, new_task)
+            );
+
+            // Store in local storage
+            window.localStorage.setItem('kinetic', JSON.stringify(updated_tasks));
+            return updated_tasks;
+        });
 
         if (submitAction.current === 'save changes') {
             // TODO: Set the new task
@@ -44,7 +67,7 @@ function DisplayTaskDialog(
         dialogRef.current?.close(); // Close the dialog
     }
 
-    function onClose() { setDisplayTask(null) }; // For the dialog's closing event
+    function onClose() { setTaskIdx(-1) }; // For the dialog's closing event
 
     const imageSrc = `./src/assets/TasksThumbnails/${display_task?.task_pic_idx}.webp`;
     const currentDateTimeLocal = useCurrentDateTimeConstraint();
@@ -58,7 +81,7 @@ function DisplayTaskDialog(
             onClose={onClose}
             key={display_task ? `open-${display_task.name}` : 'closed'}
         >
-            <form
+            {display_task && <form
                 onSubmit={formSubmitAction}
             >
                 <main className="scrollBox no-scrollbar">
@@ -78,7 +101,7 @@ function DisplayTaskDialog(
                         />
                     </div>
 
-                    {display_task && 'scheduled_time' in display_task && <div className="time-wrapper">
+                    {isTodoTask(display_task) && <div className="time-wrapper">
                         <label htmlFor="task-stored-start-time">Scheduled Time</label>
                         <input
                             type="datetime-local"
@@ -90,7 +113,7 @@ function DisplayTaskDialog(
                         />
                     </div>}
 
-                    {display_task && 'end_time' in display_task && <div className="time-wrapper">
+                    {!isCompletedTask(display_task) && <div className="time-wrapper">
                         <label htmlFor="task-stored-end-time">Ends at</label>
                         <input
                             type="datetime-local"
@@ -118,7 +141,7 @@ function DisplayTaskDialog(
                     ><span>{isCompletedTask(display_task) ? 'Close' : 'Cancel'}</span>
                     </button>
                 </div>
-            </form>
+            </form>}
         </dialog>
     );
 }

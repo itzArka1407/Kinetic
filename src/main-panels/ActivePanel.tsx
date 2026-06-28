@@ -1,14 +1,14 @@
 // Displaying panel for active tasks
 
 import type React from "react";
-import { formatTimeDifference, type ActiveTask, type Task } from "../state";
+import { formatTimeDifference, type ActiveTask } from "../state";
 
-function ActivePanel({ tasks, setSelectedTask }: { tasks: ActiveTask[], setSelectedTask: React.Dispatch<React.SetStateAction<Task | null>> }) {
+function ActivePanel({ tasks, setDisplayTaskIdx }: { tasks: ActiveTask[], setDisplayTaskIdx: React.Dispatch<React.SetStateAction<number>> }) {
     return (
         <div className="task-container scrollBox active-container">
-            {tasks.map(task => {
+            {tasks.map((task, idx) => {
                 return task.visible ?
-                    <div onClick={() => setSelectedTask(task)}
+                    <div key={idx} onClick={() => setDisplayTaskIdx(idx)}
                         className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
                         <p className="wlc">{task.name}</p>
                         {task.start_time
