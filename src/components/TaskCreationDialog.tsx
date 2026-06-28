@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState, type SubmitEvent } from "react";
 import { useCurrentDateTimeConstraint, type ActiveTask, type Task, type TodoTask } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
+import { nanoid } from "nanoid";
 
 function TaskCreationDialog(
     { setTasks, panelIdx, actionState, setActionState }:
@@ -38,9 +39,10 @@ function TaskCreationDialog(
             const starting_time = Date.parse(formData.get('start-time') as string) || Date.now(); // For active tasks, this is Date.now(0
             const ending_time = Date.parse(formData.get('end-time') as string);
 
-            if (starting_time < Date.now() || ending_time < starting_time) return; // Invalid inpus
+            if (starting_time < Date.now() || ending_time < starting_time) return; // Invalid input
 
             let new_task: ActiveTask | TodoTask = panelIdx === 1 ? {
+                id: nanoid(),
                 name: name,
                 description: description,
                 start_time: starting_time,
@@ -48,6 +50,7 @@ function TaskCreationDialog(
                 task_pic_idx: selectedImgIdx,
                 visible: true,
             } : {
+                id: nanoid(),
                 name: name,
                 description: description,
                 scheduled_time: starting_time,

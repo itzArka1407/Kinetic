@@ -79,7 +79,7 @@ function DisplayTaskDialog(
             className="entry-anim"
             ref={dialogRef}
             onClose={onClose}
-            key={display_task ? `open-${display_task.name}` : 'closed'}
+            key={display_task ? display_task.id : 'closed'}
         >
             {display_task && <form
                 onSubmit={formSubmitAction}

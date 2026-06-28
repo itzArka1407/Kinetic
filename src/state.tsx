@@ -8,6 +8,7 @@ export type index = number; // Same, just for code readability
 
 // A task which is actively running
 export interface ActiveTask {
+    id: string, // Id of the task
     name: string, // Name of the task
     description: string, // Task description
     start_time: timestamp, // Starting time of the task
@@ -18,6 +19,7 @@ export interface ActiveTask {
 
 // A task which is scheduled for future starting
 export interface TodoTask {
+    id: string, // Id of the task
     name: string, // Name of the task
     description: string, // Task description
     scheduled_time: timestamp | undefined, // Time when the task is supposed to start(undefined -> not decided)
@@ -28,6 +30,7 @@ export interface TodoTask {
 
 // A task which is completed
 export interface CompletedTask {
+    id: string, // Id of the task
     name: string, // Name of task
     description: string, // Task description
     completed_time: timestamp, // When the task was completed

@@ -9,7 +9,7 @@ function CompletedPanel({ tasks, setDisplayTaskIdx }: { tasks: CompletedTask[], 
         <div className="task-container scrollBox completed-container">
             {tasks.map((task, idx) => {
                 return task.visible ?
-                    <div key={idx} onClick={() => setDisplayTaskIdx(idx)}
+                    <div key={task.id} onClick={() => setDisplayTaskIdx(idx)}
                         className="completed-task"
                         style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}
                     >

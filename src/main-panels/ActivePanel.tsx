@@ -8,7 +8,7 @@ function ActivePanel({ tasks, setDisplayTaskIdx }: { tasks: ActiveTask[], setDis
         <div className="task-container scrollBox active-container">
             {tasks.map((task, idx) => {
                 return task.visible ?
-                    <div key={idx} onClick={() => setDisplayTaskIdx(idx)}
+                    <div key={task.id} onClick={() => setDisplayTaskIdx(idx)}
                         className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
                         <p className="wlc">{task.name}</p>
                         {task.start_time

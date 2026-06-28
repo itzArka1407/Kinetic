@@ -8,7 +8,7 @@ function TodoPanel({ tasks, setDisplayTaskIdx }: { tasks: TodoTask[], setDisplay
         <div className="task-container scrollBox todo-container">
             {tasks.map((task, idx) => {
                 return task.visible ?
-                    <div key={idx} onClick={() => setDisplayTaskIdx(idx)}
+                    <div key={task.id} onClick={() => setDisplayTaskIdx(idx)}
                         className="todo-task" style={{ "--icon-url": `url(./src/assets/TasksThumbnails/${task.task_pic_idx}.webp)` } as React.CSSProperties}>
                         <p className="wlc">{task.name}</p>
                         {task.scheduled_time && <span className="time wlc">Starts in: {formatTimeDifference(task.scheduled_time)}</span>}
