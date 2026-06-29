@@ -41,15 +41,14 @@ function DisplayTaskDialog(
     function formSubmitAction(ev: SubmitEvent<HTMLFormElement>) {
         ev.preventDefault();
         const formData = new FormData(ev.currentTarget);
+        let new_task: TodoTask | ActiveTask;
+        const task_name = formData.get('task-name')?.toString() || '';
+        const task_desc = formData.get('task-desc')?.toString() || '';
+
+        const endTime = formData.get('end-time'); // Time when task ends
+        const end_time = endTime ? +new Date(endTime.toString()) : 0;
 
         if (!isCompletedTask(display_task) && submitAction.current === 'save changes') {
-            let new_task: TodoTask | ActiveTask;
-            const task_name = formData.get('task-name')?.toString() || '';
-            const task_desc = formData.get('task-desc')?.toString() || '';
-
-            const endTime = formData.get('end-time'); // Time when task ends
-            const end_time = endTime ? +new Date(endTime.toString()) : 0;
-
             if (isTodoTask(display_task)) {
                 const startTime = formData.get('start-time');
                 const scheduled_time = startTime ? +new Date(startTime.toString()) : 0;
@@ -73,7 +72,27 @@ function DisplayTaskDialog(
             });
 
         } else if (isTodoTask(display_task) && submitAction.current === 'start now') {
-            // TODO: Modify the starting time of the task to start it now
+            new_task = {
+                id: display_task.id,
+                name: task_name,
+                start_time: Date.now(),
+                end_time,
+                description: task_desc,
+                task_pic_idx: display_task.task_pic_idx,
+                visible: display_task.visible,
+            } as ActiveTask;
+
+            setTasks(prev_tasks => {
+                // Add the new task to the list of active task, remove the todo task from its list
+                let updated_tasks = [...prev_tasks];
+                updated_tasks[1] = [...updated_tasks[1], new_task];
+                updated_tasks[0] = updated_tasks[0].filter((_, idx) => taskIdx !== idx);
+
+                window.localStorage.setItem('kinetic', JSON.stringify(updated_tasks));
+                return updated_tasks;
+            });
+
+            setTaskIdx(-1); // CRITICAL: To avoid re-rendering of the dialog, solves react's internal race condition
         }
 
         dialogRef.current?.close(); // Close the dialog
