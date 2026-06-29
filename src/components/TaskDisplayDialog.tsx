@@ -41,26 +41,38 @@ function DisplayTaskDialog(
     function formSubmitAction(ev: SubmitEvent<HTMLFormElement>) {
         ev.preventDefault();
         const formData = new FormData(ev.currentTarget);
-        const task_name = formData.get('task-name')?.toString() || '';
-        const task_desc = formData.get('task-desc')?.toString() || '';
 
-        const new_task = { ...display_task, name: task_name, description: task_desc } as ActiveTask | TodoTask;
+        if (!isCompletedTask(display_task) && submitAction.current === 'save changes') {
+            let new_task: TodoTask | ActiveTask;
+            const task_name = formData.get('task-name')?.toString() || '';
+            const task_desc = formData.get('task-desc')?.toString() || '';
 
-        // Update with new set of tasks: both in UI and local storage
-        setTasks(prev_tasks => {
-            const updated_tasks = prev_tasks.with(
-                panelIdx,
-                prev_tasks[panelIdx].with(taskIdx, new_task)
-            );
+            const endTime = formData.get('end-time'); // Time when task ends
+            const end_time = endTime ? +new Date(endTime.toString()) : 0;
 
-            // Store in local storage
-            window.localStorage.setItem('kinetic', JSON.stringify(updated_tasks));
-            return updated_tasks;
-        });
+            if (isTodoTask(display_task)) {
+                const startTime = formData.get('start-time');
+                const scheduled_time = startTime ? +new Date(startTime.toString()) : 0;
+                if (scheduled_time >= end_time) return; // Not possible
+                new_task = { ...display_task, name: task_name, description: task_desc, end_time, scheduled_time } as TodoTask;
+            } else if (isActiveTask(display_task)) {
+                if (end_time < Date.now()) return; // Not possible
+                new_task = { ...display_task, name: task_name, description: task_desc, end_time } as ActiveTask;
+            }
 
-        if (submitAction.current === 'save changes') {
-            // TODO: Set the new task
-        } else if (submitAction.current === 'start now') {
+            // Update with new set of tasks: both in UI and local storage
+            setTasks(prev_tasks => {
+                const updated_tasks = prev_tasks.with(
+                    panelIdx,
+                    prev_tasks[panelIdx].with(taskIdx, new_task)
+                );
+
+                // Store in local storage
+                window.localStorage.setItem('kinetic', JSON.stringify(updated_tasks));
+                return updated_tasks;
+            });
+
+        } else if (isTodoTask(display_task) && submitAction.current === 'start now') {
             // TODO: Modify the starting time of the task to start it now
         }
 
