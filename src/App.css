@@ -54,7 +54,6 @@
 
     &>button::before {
         --icon-size: 2.8em;
-        mask-image: var(--icon-url);
     }
 }
 
@@ -166,10 +165,6 @@
         font-size: .8em;
         padding-top: .4em;
         transition: 1s ease;
-
-        &::before {
-            mask-image: var(--icon-url);
-        }
 
         &.selected {
             color: var(--btn-sel-clr);

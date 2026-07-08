@@ -36,11 +36,11 @@ function CalculatorDialog({ actionState, setActionState }:
         >
             <div className="calculator-screen-container">
                 <button
-                    style={{ "--icon-url": "url(./src/assets/equal.svg)" } as React.CSSProperties}
+                    style={{ "--icon-url": "url(./src/assets/minimize.svg)" } as React.CSSProperties}
                     className="closing-btn"
                     onClick={() => setActionState(null)}
                 ></button>
-                <button style={{ "--icon-url": "url(./src/assets/equal.svg)" } as React.CSSProperties}></button>
+                <button style={{ "--icon-url": "url(./src/assets/brackets.svg)" } as React.CSSProperties}></button>
                 <button style={{ "--icon-url": "url(./src/assets/equal.svg)" } as React.CSSProperties}></button>
             </div>
             <div className="top-container">
