@@ -7,6 +7,8 @@
     --input-bg: #E3DCD7;
     --bg: #EFE2D9;
     --btn-sel-clr: #5E4523;
+    --dialog-bg: #AB9B96;
+    --dialog-btn-bg: #A1674A;
     --dialog-backdrop-clr: #C6B79D11;
     --pic-overlay-clr: #E2DED0aa;
 
@@ -29,6 +31,8 @@
         --color-scroll1: rgba(196, 163, 129, 0.8);
         --color-scroll1: rgba(178, 103, 94, 0.5);
         --btn-sel-clr: #B68989;
+        --dialog-bg: #1E1A1D;
+        --dialog-btn-bg: #141414;
         --dialog-backdrop-clr: #00000011;
         --pic-overlay-clr: #0E090Eff;
     }
@@ -69,6 +73,7 @@ dialog {
     border-radius: .8em;
     width: max(20em, 70vw);
     max-height: 90vh;
+    background-color: var(--dialog-bg);
 
     &::backdrop {
         background-color: var(--dialog-backdrop-clr);
@@ -86,7 +91,7 @@ button {
 }
 
 /* Button's icon  */
-button::before {
+button[style*="--icon-url"]::before {
     content: '';
     display: block;
     width: var(--icon-size, 1.6em);
@@ -95,6 +100,7 @@ button::before {
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
+    mask-image: var(--icon-url);
 }
 
 

@@ -9,7 +9,7 @@ function TaskCreationDialog(
         {
             setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
             panelIdx: number,
-            actionState: 'task creation' | 'search-mode' | null,
+            actionState: 'task creation' | 'search-mode' | 'settings' | 'calculator' | null,
             setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>
         }
 ) {
@@ -93,10 +93,14 @@ function TaskCreationDialog(
 
                 <div className="btnBox">
                     <button
+                        aria-label="Create"
+                        style={{ "--icon-url": "url(./src/assets/send.svg)" } as React.CSSProperties}
                         type="submit"
                         onClick={() => submitAction.current = 'submit'}>
                     </button>
                     <button
+                        aria-label="Cancel"
+                        style={{ "--icon-url": "url(./src/assets/close.svg)" } as React.CSSProperties}
                         type="submit"
                         formNoValidate
                         onClick={() => submitAction.current = 'cancel'}>

@@ -11,23 +11,29 @@ import Fuse from "fuse.js";
 import ToolsPanel from "./main-panels/tools-panel/ToolsPanel";
 
 function Header(
-    { panelIdx, setTasks, searchTasks }:
+    { panelIdx, setTasks, searchTasks, actionState, setActionState }:
         {
             panelIdx: number,
             setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
             searchTasks: (_: InputEvent<HTMLInputElement>) => void,
+            actionState: 'search-mode' | 'task creation' | 'settings' | 'calculator' | null,
+            setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>,
         }
 ) {
     const buttonIconURLS = [
         'url(./src/assets/add-todo-task.svg)',
-        'url(./src/assets/add-active-task.svg)'
+        'url(./src/assets/add-active-task.svg)',
+        'url(./src/assets/settings.svg)',
     ];
-    const [actionState, setActionState] = useState<'task creation' | 'search-mode' | null>(null);
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
         if (actionState === 'search-mode') searchInputRef.current?.focus();
     }, [actionState]);
+
+    useEffect(() => {
+        if (panelIdx === 3) setActionState(null); // Refresh action state when going to tools panel
+    }, [panelIdx]);
 
     return (
         <header id='app-header'>
@@ -40,26 +46,33 @@ function Header(
                     onInput={searchTasks}
                 />
             </div>
-            <button
+            {panelIdx !== 3 && <button
                 onClick={() => { actionState !== 'search-mode' ? setActionState('search-mode') : setActionState(null) }}
                 style={{ "--icon-url": "url(./src/assets/search.svg)" } as React.CSSProperties}
                 className={actionState === 'search-mode' ? 'selected' : ''}
-            />
-            {panelIdx != 2
+            />}
+            {(panelIdx === 0 || panelIdx === 1)
                 &&
                 <button style={{ "--icon-url": buttonIconURLS[panelIdx] } as React.CSSProperties}
                     onClick={() => setActionState('task creation')}
+                />}
+            {(panelIdx === 2 || panelIdx === 3)
+                &&
+                <button style={{ "--icon-url": "url(./src/assets/settings.svg)" } as React.CSSProperties}
+                    onClick={() => setActionState('settings')}
                 />}
         </header>
     );
 }
 
-function Body({ tasks, setTasks, panelIdx, onScroll }:
+function Body({ tasks, setTasks, panelIdx, onScroll, actionState, setActionState }:
     {
         tasks: Task[][],
         setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
         panelIdx: number,
-        onScroll: (_: UIEvent<HTMLDivElement>) => void
+        onScroll: (_: UIEvent<HTMLDivElement>) => void,
+        actionState: 'settings' | 'task creation' | 'search-mode' | 'calculator' | null,
+        setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>,
     }) {
     const [display_task_idx, set_display_task_idx] = useState(-1);
 
@@ -68,7 +81,7 @@ function Body({ tasks, setTasks, panelIdx, onScroll }:
             <TodoPanel tasks={tasks[0] as TodoTask[]} setDisplayTaskIdx={set_display_task_idx} />
             <ActivePanel tasks={tasks[1] as ActiveTask[]} setDisplayTaskIdx={set_display_task_idx} />
             <CompletedPanel tasks={tasks[2] as CompletedTask[]} setDisplayTaskIdx={set_display_task_idx} />
-            <ToolsPanel />
+            <ToolsPanel actionState={actionState} setActionState={setActionState} />
             <DisplayTaskDialog
                 taskIdx={display_task_idx}
                 setTaskIdx={set_display_task_idx}
@@ -101,6 +114,7 @@ function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: Reac
 
 function APP() {
     const [panelIdx, setPanelIdx] = useState(0); // Panel index: 0,1,2 -> todo, active, completed panels
+    const [actionState, setActionState] = useState<'task creation' | 'search-mode' | 'settings' | 'calculator' | null>(null);
 
     // Get the exsiting tasks posted by the user
     let existing_data;
@@ -160,8 +174,10 @@ function APP() {
         <>
             <BrowserRouter>
             </BrowserRouter>
-            <Header panelIdx={panelIdx} setTasks={setTasks} searchTasks={filterTasks} />
-            <Body tasks={tasks} panelIdx={panelIdx} setTasks={setTasks} onScroll={handleMainPanelScroll} />
+            <Header panelIdx={panelIdx} setTasks={setTasks}
+                searchTasks={filterTasks} actionState={actionState} setActionState={setActionState} />
+            <Body tasks={tasks} panelIdx={panelIdx} setTasks={setTasks}
+                onScroll={handleMainPanelScroll} actionState={actionState} setActionState={setActionState} />
             <Footer panelIdx={panelIdx} setPanelIdx={setPanelIdx} />
         </>
     );

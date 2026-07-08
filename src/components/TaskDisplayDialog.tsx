@@ -163,9 +163,18 @@ function DisplayTaskDialog(
                 <div
                     className={isCompletedTask(display_task) ? 'compl' : isActiveTask(display_task) ? 'act' : 'todo'}
                 >
-                    <button type="submit" onClick={() => submitAction.current = 'start now'}><span>Start Now</span></button>
-                    <button type="submit" onClick={() => submitAction.current = 'save changes'}><span>Save Changes</span></button>
                     <button
+                        style={{ "--icon-url": "url(./src/assets/send.svg)" } as React.CSSProperties}
+                        type="submit"
+                        onClick={() => submitAction.current = 'start now'}
+                    ><span>Start Now</span></button>
+                    <button
+                        style={{ "--icon-url": "url(./src/assets/save.svg)" } as React.CSSProperties}
+                        type="submit"
+                        onClick={() => submitAction.current = 'save changes'}
+                    ><span>Save Changes</span></button>
+                    <button
+                        style={{ "--icon-url": "url(./src/assets/close.svg)" } as React.CSSProperties}
                         type="submit"
                         formNoValidate
                         onClick={() => submitAction.current = 'cancel'}
