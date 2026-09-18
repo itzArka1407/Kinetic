@@ -8,6 +8,7 @@
     height: max-content;
     max-width: 95vw;
     max-height: 95vh;
+    scale: var(--scale, 1);
 
     &:not(:open) {
         display: none;

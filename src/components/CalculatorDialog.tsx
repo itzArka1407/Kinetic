@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { scaleToFit } from "../stores/scale_fn";
 
 function CalculatorDialog({ actionState, setActionState }:
     {
@@ -20,16 +21,35 @@ function CalculatorDialog({ actionState, setActionState }:
         ['url(./src/assets/subtract.svg)', 'subtract'],
     ];
 
-    let [calcRes, setCalcRes] = useState<string>(''); // The result that is displayed
+    let [res_expr, res_setExpr] = useState<string>(''); // The expression displayed on the screen
+
+    // To update the expression with the new operation
+    function update_expr(ev: React.MouseEvent<HTMLButtonElement>) {
+        const clickedBtn = ev.currentTarget;
+        const disp = clickedBtn.style.getPropertyValue('disp-str') || clickedBtn.textContent || '';
+
+        res_setExpr(prev => {
+            if (clickedBtn.classList.contains('remv-opn')) {
+                return prev.slice(0, -1);
+            }
+            return prev + disp;
+        });
+
+        console.log(res_expr);
+    }
+
     const dialogRef = useRef<HTMLDialogElement | null>(null); // The ref to the dialog
 
     useEffect(() => {
         if (actionState !== "calculator") dialogRef.current?.close();
         else dialogRef.current?.showModal();
+
+        scaleToFit(dialogRef.current); // Scale the dialog to fit the screen
     }, [actionState]);
 
     return (
         <dialog
+            onClose={() => setActionState(null)}
             id="calculator-dialog"
             className="entry-anim scrollBox"
             ref={dialogRef}
@@ -40,12 +60,20 @@ function CalculatorDialog({ actionState, setActionState }:
                     className="closing-btn"
                     onClick={() => setActionState(null)}
                 ></button>
-                <button style={{ "--icon-url": "url(./src/assets/brackets.svg)" } as React.CSSProperties}></button>
+                <button style={{ "--icon-url": "url(./src/assets/menu-button.svg)" } as React.CSSProperties}></button>
                 <button style={{ "--icon-url": "url(./src/assets/equal.svg)" } as React.CSSProperties}></button>
             </div>
             <div className="top-container">
                 {top_row_btn_urls.map(([url, label]) => {
-                    return (<button style={{ "--icon-url": url } as React.CSSProperties} aria-label={label}></button>)
+                    return (
+                        <button
+                            key={url}
+                            className={label === 'back' ? 'remv-opn' : undefined}
+                            style={{ "--icon-url": url } as React.CSSProperties}
+                            aria-label={label}
+                            onClick={update_expr}
+                        ></button>
+                    );
                 })}
             </div>
             <div className="num-container">

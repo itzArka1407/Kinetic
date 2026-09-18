@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
@@ -5,6 +6,7 @@
 
 @import './component-styles/display-task-dialog.css';
 @import './component-styles/calculator-dialog.css';
+@import './tailwindimplementations.css';
 @import './animations.css';
 
 #app-header {
