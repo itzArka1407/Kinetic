@@ -8,6 +8,7 @@
 @import './component-styles/calculator-dialog.css';
 @import './tailwindimplementations.css';
 @import './animations.css';
+@import './icons.css';
 
 #app-header {
     padding: .4em;

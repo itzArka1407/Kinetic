@@ -1,0 +1,84 @@
+*[class*="icon-"]::before {
+    content: '';
+    display: block;
+    background-color: currentColor;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    width: var(--icon-size, 2em);
+    aspect-ratio: 1/1;
+    margin-inline: auto;
+}
+
+*[class*="icon-"]::before:focus-visible {
+    scale: .95;
+    transition: .3s ease;
+}
+
+*[class*="icon-"].no-ml::before {
+    margin-inline: unset;
+}
+
+.icon-pi::before {
+    mask: url(./assets/pi.svg);
+}
+
+.icon-todo::before {
+    mask: url(./assets/todo.svg);
+}
+
+.icon-active::before {
+    mask: url(./assets/active.svg);
+}
+
+.icon-completed::before {
+    mask: url(./assets/completed.svg);
+}
+
+.icon-tools::before {
+    mask: url(./assets/tools.svg);
+}
+
+.icon-menu::before {
+    mask: url(./assets/menu-button.svg);
+}
+
+.icon-equal::before {
+    mask: url(./assets/equal.svg);
+}
+
+.icon-up-arrow::before {
+    mask: url(./assets/up-arrow.svg);
+}
+
+.icon-backspace::before {
+    mask: url(./assets/backspace.svg);
+}
+
+.icon-percent::before {
+    mask: url(./assets/percent.svg);
+}
+
+.icon-close::before {
+    mask: url(./assets/close.svg);
+}
+
+.icon-division::before {
+    mask: url(./assets/division.svg);
+}
+
+.icon-add::before {
+    mask: url(./assets/add.svg);
+}
+
+.icon-subtract::before {
+    mask: url(./assets/subtract.svg);
+}
+
+.icon-minimize::before {
+    mask: url(./assets/minimize.svg);
+}
+
+.icon-calculator::before {
+    mask: url(./assets/calculator.svg);
+}

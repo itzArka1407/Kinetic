@@ -8,7 +8,7 @@ function ToolsPanel({ actionState, setActionState }: {
         <div className="tools-container">
             <CalculatorDialog actionState={actionState} setActionState={setActionState} />
             <button
-                style={{ "--icon-url": "url(./src/assets/calculator.svg)" } as React.CSSProperties}
+                className="icon-calculator"
                 onClick={() => setActionState('calculator')}
             >Calculator</button>
         </div>

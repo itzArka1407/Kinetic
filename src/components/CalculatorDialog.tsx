@@ -8,34 +8,42 @@ function CalculatorDialog({ actionState, setActionState }:
     }) {
     // The buttons that are placed inside the calculator
     const top_row_btn_urls = [
-        ['url(./src/assets/up-arrow.svg)', 'exponent'],
-        ['url(./src/assets/pi.svg)', 'pi'],
-        ['url(./src/assets/backspace.svg)', 'back'],
+        ['icon-up-arrow', 'exponent'],
+        ['icon-pi', 'pi'],
+        ['icon-backspace', 'back'],
     ];
     const numbers_panel_btns = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'e'];
     const right_col_btn_urls = [
-        ['url(./src/assets/percent.svg)', 'remainder'],
-        ['url(./src/assets/close.svg)', 'multiply'],
-        ['url(./src/assets/division.svg)', 'divide'],
-        ['url(./src/assets/add.svg)', 'add'],
-        ['url(./src/assets/subtract.svg)', 'subtract'],
+        ['icon-percent', 'remainder'],
+        ['icon-close', 'multiply'],
+        ['icon-division', 'divide'],
+        ['icon-add', 'add'],
+        ['icon-subtract', 'subtract'],
     ];
 
-    let [res_expr, res_setExpr] = useState<string>(''); // The expression displayed on the screen
+    interface DisplayToken {
+        value: string, // The value of the token
+        kind: 'icon' | 'text', // If it is a text token or a icon token 
+    }
+
+    let [res_tokens, res_setTokens] = useState<DisplayToken[]>([]); // The expression displayed on the screen
 
     // To update the expression with the new operation
     function update_expr(ev: React.MouseEvent<HTMLButtonElement>) {
         const clickedBtn = ev.currentTarget;
-        const disp = clickedBtn.style.getPropertyValue('disp-str') || clickedBtn.textContent || '';
 
-        res_setExpr(prev => {
-            if (clickedBtn.classList.contains('remv-opn')) {
+        res_setTokens(prev => {
+            console.log(prev); // #testing
+            if (clickedBtn.classList.contains('remv-opn') && prev.length > 0) {
                 return prev.slice(0, -1);
             }
-            return prev + disp;
-        });
 
-        console.log(res_expr);
+            const iconText = clickedBtn.style.getPropertyValue('--icon-url'); // Check the icon text(if exists)
+            const disp: DisplayToken = iconText.length === 0 ?
+                { value: clickedBtn.textContent || '', kind: 'text' } : // No icon class - render the textcontent
+                { value: clickedBtn.style.getPropertyValue('--icon-url'), kind: 'icon' };
+            return [...prev, disp];
+        });
     }
 
     const dialogRef = useRef<HTMLDialogElement | null>(null); // The ref to the dialog
@@ -54,22 +62,26 @@ function CalculatorDialog({ actionState, setActionState }:
             className="entry-anim scrollBox"
             ref={dialogRef}
         >
-            <div className="calculator-screen-container">
+            <div className="calculator-screen-container" >
+                <div className="rendering-screen">
+                    <div>{res_tokens.map(t => {
+                        return t.kind === 'text' ?
+                            <span>{t.value}</span> :
+                            <span style={{ "--icon-url": t.value } as React.CSSProperties}></span>
+                    })}</div>
+                </div>
                 <button
-                    style={{ "--icon-url": "url(./src/assets/minimize.svg)" } as React.CSSProperties}
-                    className="closing-btn"
+                    className="closing-btn icon-minimize"
                     onClick={() => setActionState(null)}
                 ></button>
-                <button style={{ "--icon-url": "url(./src/assets/menu-button.svg)" } as React.CSSProperties}></button>
-                <button style={{ "--icon-url": "url(./src/assets/equal.svg)" } as React.CSSProperties}></button>
+                <button className="icon-menu"></button>
+                <button className="icon-equal"></button>
             </div>
             <div className="top-container">
-                {top_row_btn_urls.map(([url, label]) => {
+                {top_row_btn_urls.map(([icon, label]) => {
                     return (
                         <button
-                            key={url}
-                            className={label === 'back' ? 'remv-opn' : undefined}
-                            style={{ "--icon-url": url } as React.CSSProperties}
+                            className={`${label === 'back' ? 'remv-opn' : ''} ${icon}`}
                             aria-label={label}
                             onClick={update_expr}
                         ></button>
@@ -78,15 +90,15 @@ function CalculatorDialog({ actionState, setActionState }:
             </div>
             <div className="num-container">
                 {numbers_panel_btns.map(text => {
-                    return (<button>{text}</button>)
+                    return (<button onClick={update_expr}>{text}</button>)
                 })}
             </div>
             <div className="right-container">
-                {right_col_btn_urls.map(([url, label]) => {
-                    return (<button style={{ "--icon-url": url } as React.CSSProperties} aria-label={label}></button>)
+                {right_col_btn_urls.map(([icon, label]) => {
+                    return (<button onClick={update_expr} className={icon} aria-label={label}></button>)
                 })}
             </div>
-        </dialog>
+        </dialog >
     );
 }
 

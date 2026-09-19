@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, type SubmitEvent } from "react";
 import { formatTimeDifference, formatTimestampForInput, useCurrentDateTimeConstraint, type ActiveTask, type CompletedTask, type Task, type TodoTask } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
+import { scaleToFit } from "../stores/scale_fn";
 
 function DisplayTaskDialog(
     { tasks, setTasks, panelIdx, taskIdx, setTaskIdx }
@@ -36,6 +37,8 @@ function DisplayTaskDialog(
     useEffect(() => {
         submitAction.current = 'cancel'; // Per new task, the submit action is refreshed
         if (display_task) dialogRef.current?.showModal();
+
+        scaleToFit(dialogRef.current); // Scale as per the screen
     }, [display_task]);
 
     function formSubmitAction(ev: SubmitEvent<HTMLFormElement>) {
