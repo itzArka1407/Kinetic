@@ -23,6 +23,10 @@
     mask: url(./assets/pi.svg);
 }
 
+.icon-edit::before {
+    mask: url(./assets/edit.svg);
+}
+
 .icon-save::before {
     mask: url(./assets/save.svg);
 }

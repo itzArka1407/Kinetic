@@ -155,7 +155,6 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-auto-flow: column;
     gap: .8em;
-    padding: .2em;
     position: sticky;
     bottom: 0;
     backdrop-filter: blur(4px);

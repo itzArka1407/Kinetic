@@ -96,7 +96,7 @@ function Body({ tasks, setTasks, panelIdx, onScroll, actionState, setActionState
 
 function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: React.Dispatch<React.SetStateAction<number>> }) {
     return (
-        <footer id='app-footer'>
+        <footer id='app-footer' className="py-4">
             <FooterButton active={panelIdx == 0} name='Todo' classes="icon-todo" onClick={(_ev) => {
                 setPanelIdx(0);
             }} />
