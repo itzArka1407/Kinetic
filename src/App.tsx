@@ -49,8 +49,7 @@ function Header(
             </div>
             {panelIdx !== 3 && <button
                 onClick={() => { actionState !== 'search-mode' ? setActionState('search-mode') : setActionState(null) }}
-                style={{ "--icon-url": "url(./src/assets/search.svg)" } as React.CSSProperties}
-                className={actionState === 'search-mode' ? 'selected' : ''}
+                className={`${actionState === "search-mode" ? "selected" : ""} icon-search`}
             />}
             {(panelIdx === 0 || panelIdx === 1)
                 &&

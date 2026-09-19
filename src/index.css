@@ -63,7 +63,12 @@
 
 textarea,
 input {
-    all: unset;
+    appearance: none;
+
+    &:focus {
+        border: none;
+        outline: none;
+    }
 }
 
 dialog {

@@ -1,4 +1,6 @@
 @theme {
     --text-xs: 0.75rem;
     --text-xs--line-height: 1rem;
+
+    --color-inputB: var(--input-bg);
 }

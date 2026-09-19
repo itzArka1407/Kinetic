@@ -23,8 +23,16 @@
     mask: url(./assets/pi.svg);
 }
 
+.icon-save::before {
+    mask: url(./assets/save.svg);
+}
+
 .icon-todo::before {
     mask: url(./assets/todo.svg);
+}
+
+.icon-search::before {
+    mask: url(./assets/search.svg);
 }
 
 .icon-notepad::before {
