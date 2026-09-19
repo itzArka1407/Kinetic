@@ -33,12 +33,16 @@
             border-radius: .4em;
 
             &>div {
-                overflow: hidden;
                 height: 2em;
                 line-height: 2em;
-                text-align: end;
-            }
+                display: flex;
+                justify-content: flex-end;
 
+                &>span[class*="icon-"] {
+                    display: grid;
+                    place-content: center;
+                }
+            }
         }
 
         /* The calculated data shown in the screen */

@@ -3,14 +3,15 @@ import React, { useEffect, useRef, useState, type SubmitEvent } from "react";
 import { useCurrentDateTimeConstraint, type ActiveTask, type Task, type TodoTask } from "../state";
 import TextAreaWrapper from "./TextAreaWrapper";
 import { nanoid } from "nanoid";
+import type { ActionState } from "../stores/state_types";
 
 function TaskCreationDialog(
     { setTasks, panelIdx, actionState, setActionState }:
         {
             setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
             panelIdx: number,
-            actionState: 'task creation' | 'search-mode' | 'settings' | 'calculator' | null,
-            setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>
+            actionState: ActionState,
+            setActionState: React.Dispatch<React.SetStateAction<ActionState>>
         }
 ) {
     const [selectedImgIdx, setSelectedImgIdx] = useState(1); // The index of the image that is set as wallpaper for the task

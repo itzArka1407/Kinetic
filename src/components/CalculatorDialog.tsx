@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { scaleToFit } from "../stores/scale_fn";
+import type { ActionState } from "../stores/state_types";
 
 function CalculatorDialog({ actionState, setActionState }:
     {
-        actionState: 'settings' | 'calculator' | 'search-mode' | 'task creation' | null,
-        setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>,
+        actionState: ActionState,
+        setActionState: React.Dispatch<React.SetStateAction<ActionState>>,
     }) {
     // The buttons that are placed inside the calculator
     const top_row_btn_urls = [
@@ -38,10 +39,10 @@ function CalculatorDialog({ actionState, setActionState }:
                 return prev.slice(0, -1);
             }
 
-            const iconText = clickedBtn.style.getPropertyValue('--icon-url'); // Check the icon text(if exists)
-            const disp: DisplayToken = iconText.length === 0 ?
+            const iconText = clickedBtn.className.match(/\bicon-\S+/); // Get the icon class(if present)
+            const disp: DisplayToken = !iconText ?
                 { value: clickedBtn.textContent || '', kind: 'text' } : // No icon class - render the textcontent
-                { value: clickedBtn.style.getPropertyValue('--icon-url'), kind: 'icon' };
+                { value: iconText[0], kind: 'icon' };
             return [...prev, disp];
         });
     }
@@ -64,10 +65,10 @@ function CalculatorDialog({ actionState, setActionState }:
         >
             <div className="calculator-screen-container" >
                 <div className="rendering-screen">
-                    <div>{res_tokens.map(t => {
+                    <div className="scrollBox">{res_tokens.map(t => {
                         return t.kind === 'text' ?
                             <span>{t.value}</span> :
-                            <span style={{ "--icon-url": t.value } as React.CSSProperties}></span>
+                            <span className={t.value}></span>
                     })}</div>
                 </div>
                 <button
@@ -81,6 +82,7 @@ function CalculatorDialog({ actionState, setActionState }:
                 {top_row_btn_urls.map(([icon, label]) => {
                     return (
                         <button
+                            key={label}
                             className={`${label === 'back' ? 'remv-opn' : ''} ${icon}`}
                             aria-label={label}
                             onClick={update_expr}
@@ -90,12 +92,12 @@ function CalculatorDialog({ actionState, setActionState }:
             </div>
             <div className="num-container">
                 {numbers_panel_btns.map(text => {
-                    return (<button onClick={update_expr}>{text}</button>)
+                    return (<button key={text} onClick={update_expr}>{text}</button>)
                 })}
             </div>
             <div className="right-container">
                 {right_col_btn_urls.map(([icon, label]) => {
-                    return (<button onClick={update_expr} className={icon} aria-label={label}></button>)
+                    return (<button key={label} onClick={update_expr} className={icon} aria-label={label}></button>)
                 })}
             </div>
         </dialog >

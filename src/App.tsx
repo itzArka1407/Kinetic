@@ -8,7 +8,8 @@ import { type ActiveTask, type CompletedTask, type Task, type TodoTask } from ".
 import TaskCreationDialog from "./components/TaskCreationDialog";
 import DisplayTaskDialog from "./components/TaskDisplayDialog";
 import Fuse from "fuse.js";
-import ToolsPanel from "./main-panels/tools-panel/ToolsPanel";
+import ToolsPanel from "./main-panels/ToolsPanel";
+import type { ActionState } from "./stores/state_types";
 
 function Header(
     { panelIdx, setTasks, searchTasks, actionState, setActionState }:
@@ -16,8 +17,8 @@ function Header(
             panelIdx: number,
             setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
             searchTasks: (_: InputEvent<HTMLInputElement>) => void,
-            actionState: 'search-mode' | 'task creation' | 'settings' | 'calculator' | null,
-            setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>,
+            actionState: ActionState,
+            setActionState: React.Dispatch<React.SetStateAction<ActionState>>,
         }
 ) {
     const buttonIconURLS = [
@@ -71,8 +72,8 @@ function Body({ tasks, setTasks, panelIdx, onScroll, actionState, setActionState
         setTasks: React.Dispatch<React.SetStateAction<Task[][]>>,
         panelIdx: number,
         onScroll: (_: UIEvent<HTMLDivElement>) => void,
-        actionState: 'settings' | 'task creation' | 'search-mode' | 'calculator' | null,
-        setActionState: React.Dispatch<React.SetStateAction<typeof actionState>>,
+        actionState: ActionState,
+        setActionState: React.Dispatch<React.SetStateAction<ActionState>>,
     }) {
     const [display_task_idx, set_display_task_idx] = useState(-1);
 
@@ -114,7 +115,7 @@ function Footer({ panelIdx, setPanelIdx }: { panelIdx: number, setPanelIdx: Reac
 
 function APP() {
     const [panelIdx, setPanelIdx] = useState(0); // Panel index: 0,1,2 -> todo, active, completed panels
-    const [actionState, setActionState] = useState<'task creation' | 'search-mode' | 'settings' | 'calculator' | null>(null);
+    const [actionState, setActionState] = useState<ActionState>(null);
 
     // Get the exsiting tasks posted by the user
     let existing_data;

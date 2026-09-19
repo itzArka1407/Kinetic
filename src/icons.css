@@ -27,6 +27,10 @@
     mask: url(./assets/todo.svg);
 }
 
+.icon-notepad::before {
+    mask: url(./assets/notepad.svg);
+}
+
 .icon-active::before {
     mask: url(./assets/active.svg);
 }
