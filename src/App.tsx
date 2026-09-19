@@ -21,10 +21,10 @@ function Header(
             setActionState: React.Dispatch<React.SetStateAction<ActionState>>,
         }
 ) {
-    const buttonIconURLS = [
-        'url(./src/assets/add-todo-task.svg)',
-        'url(./src/assets/add-active-task.svg)',
-        'url(./src/assets/settings.svg)',
+    // The icons of the buttons to be displayed in the app header
+    const buttonIcons = [
+        ['icon-add-todo', 'Add Todo Task'],
+        ['icon-add-active', 'Add Active Task'],
     ];
     const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -53,12 +53,13 @@ function Header(
             />}
             {(panelIdx === 0 || panelIdx === 1)
                 &&
-                <button style={{ "--icon-url": buttonIconURLS[panelIdx] } as React.CSSProperties}
+                <button className={buttonIcons[panelIdx][0]}
+                    aria-label={buttonIcons[panelIdx][1]}
                     onClick={() => setActionState('task creation')}
                 />}
             {(panelIdx === 2 || panelIdx === 3)
                 &&
-                <button style={{ "--icon-url": "url(./src/assets/settings.svg)" } as React.CSSProperties}
+                <button className="icon-settings"
                     onClick={() => setActionState('settings')}
                 />}
         </header>

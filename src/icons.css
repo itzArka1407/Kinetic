@@ -35,6 +35,18 @@
     mask: url(./assets/search.svg);
 }
 
+.icon-add-todo::before {
+    mask: url(./assets/add-todo-task.svg);
+}
+
+.icon-add-active::before {
+    mask: url(./assets/add-active-task.svg);
+}
+
+.icon-settings::before {
+    mask: url(./assets/settings.svg);
+}
+
 .icon-notepad::before {
     mask: url(./assets/notepad.svg);
 }
